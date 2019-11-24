@@ -11,8 +11,7 @@
   "scripts": {
     "start:app": "PORT=3001 react-scripts start",
     "build:app": "react-scripts build",
-    "test:app": "react-scripts test",
-    "eject:app": "react-scripts eject"
+    "test:app": "react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"
