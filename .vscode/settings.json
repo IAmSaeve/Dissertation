@@ -3,5 +3,6 @@
     "eslint.workingDirectories": [
         "./app",
         "./server"
-    ]
+    ],
+    "npm.enableScriptExplorer": true
 }
