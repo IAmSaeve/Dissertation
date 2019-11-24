@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import './App.scss';
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 function App() {
   function c() {
