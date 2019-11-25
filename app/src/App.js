@@ -1,18 +1,18 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
-import './App.scss';
-import crypto from 'crypto';
+import React, { Component } from 'react';
+import Navi from "./Router/Navi";
+import RouterOutput from "./Router/RouterOutput";
+import './Styles/App.scss';
 
-function App() {
-  function c() {
-    console.log(crypto.randomBytes(4).toString('hex'));
+class App extends Component {
+  render() {
+    return (
+      <div>
+          <Navi></Navi>
+         <RouterOutput></RouterOutput>     
+      </div>
+    );
   }
-
-  return (
-    <div className="App">
-      <button onClick={c}>CLICK</button>
-    </div>
-  );
 }
 
 export default App;
