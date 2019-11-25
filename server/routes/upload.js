@@ -6,26 +6,41 @@ const crypto = require('crypto');
 const fs = require('fs');
 const { tmpdir } = require('os');
 const { sep } = require('path');
+const multer = require('multer')
 
-router.post('/', function (req, res, next) {
-  // This should use the client generated ID
-  const routeId = crypto.randomBytes(8).toString('hex');
+var routeId = "";
 
-  // Set filepath and create tempfolder
-  const filePath = `${tmpdir()}${sep}${routeId}`;
-  fs.mkdirSync(filePath, { recursive: true })
+// FIXME: Create only one folder per request
+let storage = multer.diskStorage({
+  // pass function that will generate destination path
+  destination: (req, file, cb) => {
+    routeId = crypto.randomBytes(8).toString('hex');
+    const filePath = `${tmpdir()}${sep}${routeId}`;
+    fs.mkdirSync(filePath, { recursive: true })
+    console.log('DEST', filePath)
+    console.log('FILE', file.originalname)
+    cb(
+      null,
+      filePath
+    );
+  },
+  // pass function that may generate unique filename if needed
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.originalname
+    );
+  }
+});
 
-  // Create write stream for files
-  // FIXME: Write stream requires filename. Maybe look onto Busboy, https://github.com/mscdex/busboy
-  // var writeStream = fs.createWriteStream(`${filePath}${sep}SomeFileName.extention`)
+let upload = multer({ storage: storage })
 
-  console.log(req)
-  // req.pipe(writeStream)
-
+// TODO: Maybe clear id after response
+router.post('/', upload.any(), function (req, res, next) {
   // Create download URL
   const downloadUrl = `${req.protocol}://${req.get('host')}/download/${routeId}`
 
-  res.send(JSON.stringify(downloadUrl))
+  res.json(downloadUrl)
 });
 
 module.exports = router;
