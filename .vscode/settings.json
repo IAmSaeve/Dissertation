@@ -4,5 +4,6 @@
         "./app",
         "./server"
     ],
-    "npm.enableScriptExplorer": true
+    "npm.enableScriptExplorer": true,
+    "eslint.options": { "configFile": "./.eslintrc.js" }
 }

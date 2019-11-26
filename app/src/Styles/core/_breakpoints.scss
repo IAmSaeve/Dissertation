@@ -1,0 +1,83 @@
+@import "range.scss";
+
+// Breakpoint values
+$small-range: (0em, 40em); // 0, 640px
+$medium-range: (40.063em, 64em); // 641px, 1024px
+$large-range: (64.063em, 90em); // 1025px, 1440px
+$xlarge-range: (90.063em, 120em); // 1441px, 1920px
+$xxlarge-range: (120.063em); // 1921px
+
+// Defining media queries
+$small-up: "(min-width: #{lower-bound($small-range)})" !default;
+$small-only: "(min-width: #{lower-bound($small-range)}) and (max-width:#{upper-bound($small-range)})" !default;
+$medium-up: "(min-width:#{lower-bound($medium-range)})" !default;
+$medium-only: "(min-width:#{lower-bound($medium-range)}) and (max-width:#{upper-bound($medium-range)})" !default;
+$large-up: "(min-width:#{lower-bound($large-range)})" !default;
+$large-only: "(min-width:#{lower-bound($large-range)}) and (max-width:#{upper-bound($large-range)})" !default;
+$xlarge-up: "(min-width:#{lower-bound($xlarge-range)})" !default;
+$xlarge-only: "(min-width:#{lower-bound($xlarge-range)}) and (max-width:#{upper-bound($xlarge-range)})" !default;
+$xxlarge-up: "(min-width:#{lower-bound($xxlarge-range)})" !default;
+$xxlarge-only: "(min-width:#{lower-bound($xxlarge-range)}) and (max-width:#{upper-bound($xxlarge-range)})" !default;
+
+// Define mixins for use in other files
+@mixin breakpoint($bp) {
+    @if "#{$bp}"=="small only" {
+        @media #{$small-only} {
+            @content;
+        }
+    }
+
+    @if "#{$bp}"=="small up" {
+        @media #{$small-up} {
+            @content;
+        }
+    }
+
+    @if "#{$bp}"=="medium only" {
+        @media #{$medium-only} {
+            @content;
+        }
+    }
+
+    @if "#{$bp}"=="medium up" {
+        @media #{medium-up} {
+            @content;
+        }
+    }
+
+    @if "#{$bp}"=="large only" {
+        @media #{large-only} {
+            @content;
+        }
+    }
+
+    @if "#{$bp}"=="large up" {
+        @media #{large-up} {
+            @content;
+        }
+    }
+
+    @if "#{$bp}"=="xlarge only" {
+        @media #{xlarge-only} {
+            @content;
+        }
+    }
+
+    @if "#{$bp}"=="xlarge up" {
+        @media #{xlarge-up} {
+            @content;
+        }
+    }
+
+    @if "#{$bp}"=="xxlarge only" {
+        @media #{xxlarge-only} {
+            @content;
+        }
+    }
+
+    @if "#{$bp}"=="xxlarge up" {
+        @media #{xxlarge-up} {
+            @content;
+        }
+    }
+}
