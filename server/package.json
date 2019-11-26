@@ -1,13 +1,15 @@
 {
   "name": "i-need-a-name-server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
-    "start:srv": "node ./bin/www"
+    "start:srv": "node ./bin/www",
+    "dev:srv": "npx supervisor ./bin/www"
   },
   "dependencies": {
     "express": "~4.16.1",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "multer": "^1.4.2"
   },
   "devDependencies": {
     "eslint": "^6.7.0"
