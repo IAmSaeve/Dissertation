@@ -13,7 +13,7 @@ class Upload extends Component {
 
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-        this.Remove = this.Remove.bind(this);
+        this.onRemove = this.Remove.bind(this);
     }
 
 
@@ -42,7 +42,7 @@ class Upload extends Component {
 
     }
 
-    Remove = (file) => {
+    onRemove = (file) => {
         // submit the data to the server
         var array = [...this.state.files]; // make a separate copy of the array
         var index = array.indexOf(file)
@@ -75,7 +75,7 @@ class Upload extends Component {
                             return (
                                 <div key={file.name} className="Row">
                                     <span className="Filename">{file.name}</span>
-                                    <button onClick={this.Remove.bind(this, file)}>Remove</button>
+                                    <button onClick={this.onRemove.bind(this, file)}>Remove</button>
                                 </div>
                             );
                         })
