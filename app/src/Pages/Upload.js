@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 
-
-
 class Upload extends Component {
     constructor(props) {
         super(props);
@@ -18,9 +16,8 @@ class Upload extends Component {
 
 
 
-    onChange = event => {
+    onChange = (event) => {
         event.persist()
-        
         if (0 < event.target.files.length) {
             for (let index = 0; index < event.target.files.length; index++) {
                 this.setState(prevState => ({
@@ -38,8 +35,6 @@ class Upload extends Component {
         const data = new FormData()
         data.append('file', this.state.selectedFile)
         console.log(data.get('file'));
-
-
     }
 
     onRemove = (file) => {
@@ -70,7 +65,6 @@ class Upload extends Component {
                 </form>
                 <div className="Files">
                     {
-
                         this.state.files.map(file => {
                             return (
                                 <div key={file.name} className="Row">
@@ -79,8 +73,6 @@ class Upload extends Component {
                                 </div>
                             );
                         })
-
-
                     }
                 </div>
             </div>
