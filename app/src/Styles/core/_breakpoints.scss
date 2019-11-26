@@ -40,43 +40,43 @@ $xxlarge-only: "(min-width:#{lower-bound($xxlarge-range)}) and (max-width:#{uppe
     }
 
     @if "#{$bp}"=="medium up" {
-        @media #{medium-up} {
+        @media #{$medium-up} {
             @content;
         }
     }
 
     @if "#{$bp}"=="large only" {
-        @media #{large-only} {
+        @media #{$large-only} {
             @content;
         }
     }
 
     @if "#{$bp}"=="large up" {
-        @media #{large-up} {
+        @media #{$large-up} {
             @content;
         }
     }
 
     @if "#{$bp}"=="xlarge only" {
-        @media #{xlarge-only} {
+        @media #{$xlarge-only} {
             @content;
         }
     }
 
     @if "#{$bp}"=="xlarge up" {
-        @media #{xlarge-up} {
+        @media #{$xlarge-up} {
             @content;
         }
     }
 
     @if "#{$bp}"=="xxlarge only" {
-        @media #{xxlarge-only} {
+        @media #{$xxlarge-only} {
             @content;
         }
     }
 
     @if "#{$bp}"=="xxlarge up" {
-        @media #{xxlarge-up} {
+        @media #{$xxlarge-up} {
             @content;
         }
     }
