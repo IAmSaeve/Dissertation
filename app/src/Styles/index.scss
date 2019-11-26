@@ -1,0 +1,19 @@
+@import "./core/breakpoints";
+
+body {
+    margin: 0;
+}
+
+body::after {
+    content: "";
+    padding: 10px;
+    background-color: #efefefcc;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    white-space: nowrap;
+
+    @include breakpoint(small only) {
+        content: "Small: 640px";
+    }
+}

@@ -5,10 +5,11 @@ import { Link } from 'react-router-dom';
 class Head extends Component {
   render() {
     return (
-      <nav>
-        <div>
-          <ul >
-            <li><h3 >FileCompanion </h3></li>
+      <header>
+        <nav>
+          {/* TODO: This should be a h1 with h3 styling */}
+          <h3>FileCompanion</h3>
+          <ul>
             <li>
               <Link to='/Upload'>Upload</Link>
             </li>
@@ -16,8 +17,8 @@ class Head extends Component {
               <Link to='/Download' >Download</Link>
             </li>
           </ul>
-        </div>
-      </nav>
+        </nav>
+      </header>
     );
   }
 }

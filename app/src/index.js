@@ -4,9 +4,11 @@ import ReactDOM from 'react-dom';
 import './Styles/index.scss';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import Header from "./Router/Header";
 
 ReactDOM.render(
     <BrowserRouter>
+        <Header />
         <App />
     </BrowserRouter>,
     document.getElementById('root')
