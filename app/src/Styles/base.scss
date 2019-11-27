@@ -1,0 +1,13 @@
+// Mixins import
+@import "./core/viewport-indicator";
+
+// Global markup
+body {
+    margin: 0;
+}
+
+// Components
+@import "./Components/Header";
+
+// Helpers
+@include viewportIndicator;

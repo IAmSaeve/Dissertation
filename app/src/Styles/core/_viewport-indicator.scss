@@ -11,23 +11,23 @@
         white-space: nowrap;
     
         @include breakpoint(small only) {
-            content: "Small: 0, 640px";
+            content: "Small: 0 - 640px";
         }
 
         @include breakpoint(medium only) {
-            content: "Medium: 641px, 1024px";
+            content: "Medium: 641px - 1024px";
         }
 
         @include breakpoint(large only) {
-            content: "Large: 1025px, 1440px";
+            content: "Large: 1025px - 1440px";
         }
 
         @include breakpoint(xlarge only) {
-            content: "XLarge: 1441px, 1920px";
+            content: "XLarge: 1441px - 1920px";
         }
 
         @include breakpoint(xxlarge up) {
-            content: "XXLarge: 1921px, above";
+            content: "XXLarge: 1921px - above";
         }
     }
 }

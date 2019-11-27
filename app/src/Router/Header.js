@@ -7,16 +7,7 @@ class Head extends Component {
     return (
       <header>
         <nav>
-          {/* TODO: This should be a h1 with h3 styling */}
-          <h3>FileCompanion</h3>
-          <ul>
-            <li>
-              <Link to='/Upload'>Upload</Link>
-            </li>
-            <li>
-              <Link to='/Download' >Download</Link>
-            </li>
-          </ul>
+          <h1>FileCompanion</h1>
         </nav>
       </header>
     );

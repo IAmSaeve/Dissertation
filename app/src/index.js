@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './Styles/index.scss';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import Header from "./Router/Header";
