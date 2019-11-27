@@ -14,7 +14,7 @@ class Upload extends Component {
     }
     /**
      * Function that is turned into a promise.
-     * adding the newly selected files & clears inputfield.
+     * adding the newly selected files to state.
      */
     onChange = (event) => 
      new Promise((resolve) =>{
@@ -71,14 +71,18 @@ class Upload extends Component {
                             type="file"
                             key={this.state.inputKey}
                             onClick={this.clear}
+                            //sets the input field to null
                             onChange={(event) => this.onChange(event).then(event =>event.target.value=null)}
                             multiple
                         />
                     </label>
                     <button onClick={this.onSubmit} type="submit">Submit</button>
                 </form>
+
+               
                 <div className="Files">
                     {
+                        //TODO: maybe export this into another component?
                         this.state.files.map(file => {
                             if (this.state.files !== 0) {
                                 return (
