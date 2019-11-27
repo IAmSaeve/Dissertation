@@ -12,13 +12,12 @@ class Upload extends Component {
         this.onSubmit = this.onSubmit.bind(this);
         this.onRemove = this.onRemove.bind(this);
     }
-
-    clear = (event) => {
-        event.target.value = null;
-    }
-
-    onChange = (event) => {
-        event.preventDefault();
+    /**
+     * Function that is turned into a promise.
+     * adding the newly selected files & clears inputfield.
+     */
+    onChange = (event) => 
+     new Promise((resolve) =>{
         event.persist()
         if (0 < event.target.files.length) {
             for (let index = 0; index < event.target.files.length; index++) {
@@ -28,11 +27,14 @@ class Upload extends Component {
                 );
             }
         }
-    }
-
+    resolve(event);
+    });
+    /**
+     * Function that adds all the selected files, to 
+     * a formdata and sends data to the server.
+     */
     onSubmit = (event) => {
         event.preventDefault();
-        // submit the data to the server
         console.log(this.state.files);
         const data = new FormData()
         for (let index = 0; index < this.state.files.length; index++) {
@@ -41,7 +43,12 @@ class Upload extends Component {
         }
 
     }
-
+    /**
+     * Function that removes the file selected.
+     * makes a separate copy of the array,
+     * removes the file, from the copied array and 
+     * sets state equals to the new copy.
+     */
     onRemove = (file) => {
         // submit the data to the server
         var array = [...this.state.files]; // make a separate copy of the array
@@ -64,7 +71,7 @@ class Upload extends Component {
                             type="file"
                             key={this.state.inputKey}
                             onClick={this.clear}
-                            onChange={(event) => this.onChange(event)}
+                            onChange={(event) => this.onChange(event).then(event =>event.target.value=null)}
                             multiple
                         />
                     </label>

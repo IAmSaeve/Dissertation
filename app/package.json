@@ -1,5 +1,6 @@
 {
   "name": "i-need-a-name",
+  "proxy": "http://localhost:3001",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
@@ -33,4 +34,5 @@
     "eslint": "^6.7.0",
     "eslint-plugin-react": "^7.16.0"
   }
+  
 }
