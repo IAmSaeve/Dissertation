@@ -13,7 +13,7 @@ class RouterOutput extends Component {
              <div>
               <Switch>
                     <Route exact path='/Download' component={Download}/>
-                    <Route  path='/Upload'  component={Upload}/> 
+                    <Route  path='/'  component={Upload}/> 
               </Switch>
                 </div>
             </main>
