@@ -37,6 +37,22 @@ class UploadContextProvider extends Component {
             data.append('file' + index.toString(), this.state.files[index])
             console.log(index, data.get('file' + index));
         }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', data, true);
+
+        xhr.upload.onprogress = function (e) {
+            if (e.lengthComputable) {
+                var percentComplete = (e.loaded / e.total) * 100;
+                console.log(percentComplete + '% uploaded');
+            }
+        };
+        xhr.onload = function () {
+            if (this.status === 200) {
+                var res = JSON.parse(this.response);
+                console.log('Server got:', res);
+            }
+        };
     }
     /**
      * Function that removes the file selected.

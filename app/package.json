@@ -1,6 +1,5 @@
 {
   "name": "i-need-a-name",
-  "proxy": "http://localhost:3001",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
@@ -11,7 +10,7 @@
     "react-scripts": "3.2.0"
   },
   "scripts": {
-    "start:app": "react-scripts start",
+    "start:app": "cross-env PORT=3000 react-scripts start",
     "build:app": "react-scripts build",
     "test:app": "react-scripts test"
   },
@@ -31,8 +30,8 @@
     ]
   },
   "devDependencies": {
+    "cross-env": "^6.0.3",
     "eslint": "^6.7.0",
     "eslint-plugin-react": "^7.16.0"
   }
-  
 }
