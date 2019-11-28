@@ -13,7 +13,7 @@ class Uploadfiles extends Component {
                         return (
                             <div key={file.name} className="Row">
                                 <span className="Filename">{file.name}</span>
-                                <button onClick={onRemove.bind(this, file)}>Remove</button>
+                                <button onClick={()=>onRemove(file)}>Remove</button>
                             </div>
                         );
                     })

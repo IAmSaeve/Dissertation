@@ -4,16 +4,11 @@ import React, { Component, createContext } from 'react';
 export const UploadContext = createContext();
 
 class UploadContextProvider extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            files: [],
-        };
 
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-        this.onRemove = this.onRemove.bind(this);
-    }
+    state = {
+        files: [],
+    };
+
     onChange = (event) =>
         new Promise((resolve) => {
             event.persist()
@@ -40,7 +35,6 @@ class UploadContextProvider extends Component {
             data.append('file' + index.toString(), this.state.files[index])
             console.log(index, data.get('file' + index));
         }
-
     }
     /**
      * Function that removes the file selected.
