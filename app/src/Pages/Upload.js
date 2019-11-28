@@ -9,7 +9,7 @@ class Upload extends Component {
         const { onSubmit, onChange } = this.context;
         return (
             <div>
-                <form id="myForm" encType="multipart/form-data">
+                <form id="uploadForm" encType="multipart/form-data">
                     <label > Select here
                     <input
                             id="upload"

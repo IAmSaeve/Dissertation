@@ -7,7 +7,7 @@ class Uploadfiles extends Component {
     render() {
         const { files, onRemove } = this.context;
         return (
-            <div className="Files">
+            <div className="uploadFiles">
                 {
                     files.map(file => {
                         return (
