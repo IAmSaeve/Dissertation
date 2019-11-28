@@ -2,7 +2,9 @@
 import React, { Component, createContext } from 'react';
 
 export const UploadContext = createContext();
-
+/**
+ * Class responsible for handeling state of the upload content
+ */
 class UploadContextProvider extends Component {
 
     state = {
@@ -43,8 +45,7 @@ class UploadContextProvider extends Component {
      * sets state equals to the new copy.
      */
     onRemove = (file) => {
-        // submit the data to the server
-        var array = [...this.state.files]; // make a separate copy of the array
+        var array = [...this.state.files]; // make a separate copy of the array.
         var index = array.indexOf(file)
         if (index !== -1) {
             array.splice(index, 1);
@@ -52,6 +53,9 @@ class UploadContextProvider extends Component {
         }
         console.log(this.state.files);
     }
+    /**
+     * Render the selected content to be used by child components.
+     */
     render() {
         return (
             <UploadContext.Provider value={{

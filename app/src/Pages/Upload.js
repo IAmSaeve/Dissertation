@@ -2,10 +2,14 @@
 import React, { Component } from 'react';
 import { UploadContext } from "../Contexts/UploadContext";
 import UploadFiles from "./UploadFiles";
-
+/**
+ * Class responsible for the formdata and submitting events.
+ */
 class Upload extends Component {
+    // creates a context
     static contextType = UploadContext;
     render() {
+        //establishes what from the context to use
         const { onSubmit, onChange } = this.context;
         return (
             <div>
