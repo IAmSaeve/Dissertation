@@ -15,9 +15,10 @@ class Uploadfiles extends Component {
                 {
                     files.map(file => {
                         return (
-                            <div key={file.name} className="Row">
-                                <span className="Filename">{file.name}</span>
-                                <button onClick={()=>onRemove(file)}>Remove</button>
+                            <div key={file.name} className="fileDiv">
+                                <span className="Filename">name: {file.name}</span>
+                                <span className="Filename">size: {file.size}.kb</span>
+                                <i onClick={()=>onRemove(file)} className="fas fa-minus-circle"></i>
                             </div>
                         );
                     })

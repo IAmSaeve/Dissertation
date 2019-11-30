@@ -12,9 +12,11 @@ class Upload extends Component {
         //establishes what from the context to use
         const { onSubmit, onChange } = this.context;
         return (
-            <div>
-                <form id="uploadForm" encType="multipart/form-data">
-                    <label > Select here
+            <div className="uploadGrid">
+            <div className="centerdiv">
+            <UploadFiles />
+                <form onSubmit={onSubmit} id="uploadForm" encType="multipart/form-data">
+                    <label className="button buttonPostion" > 
                     <input
                             id="upload"
                             type="file"
@@ -22,10 +24,11 @@ class Upload extends Component {
                             onChange={(event) => onChange(event).then(event => event.target.value = null)}
                             multiple
                         />
+                        Choose file here
                     </label>
-                    <button onClick={onSubmit} type="submit">Submit</button>
+                    <input className="button" type="submit" value="Submit"  />
                 </form>
-                <UploadFiles />
+            </div>
             </div>
         );
     }

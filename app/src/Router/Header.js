@@ -7,7 +7,20 @@ class Head extends Component {
     return (
       <header>
         <nav>
-          <h1>FileCompanion</h1>
+          <div className="logo">
+            <h4>FileCompanion</h4>
+          </div>
+          <ul className="nav-links">
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/about">About</Link>
+            </li>
+            <li>
+              <Link to="/projekt">Project</Link>
+            </li>
+          </ul>
         </nav>
       </header>
     );

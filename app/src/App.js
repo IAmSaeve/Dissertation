@@ -3,13 +3,15 @@ import React, { Component } from 'react';
 import RouterOutput from "./Router/RouterOutput";
 import './Styles/base.scss';
 import UploadContextProvider from './Contexts/UploadContext';
+import Header from "./Router/Header";
 
 class App extends Component {
   render() {
     return (
-      <div>
+      <div className="mainGrid">
       <UploadContextProvider>
-        <RouterOutput></RouterOutput>
+      <Header className="header"/>
+        <RouterOutput className="body"/>
         </UploadContextProvider>
       </div>
     );

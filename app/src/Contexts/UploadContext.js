@@ -14,15 +14,16 @@ class UploadContextProvider extends Component {
     onChange = (event) =>
         new Promise((resolve) => {
             event.persist()
+
             if (0 < event.target.files.length) {
                 for (let index = 0; index < event.target.files.length; index++) {
+                    console.log(event.target.files[index]);
                     this.setState(prevState => ({
                         files: prevState.files.concat(event.target.files[index])
                     })
                     );
                 }
             }
-            console.log(this.state.files);
             resolve(event);
         });
     /**
@@ -31,6 +32,7 @@ class UploadContextProvider extends Component {
      */
     onSubmit = (event) => {
         event.preventDefault();
+        console.log("hello"); 
         console.log(this.state.files);
         const data = new FormData()
         for (let index = 0; index < this.state.files.length; index++) {

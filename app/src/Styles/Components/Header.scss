@@ -1,10 +1,36 @@
 @import "./core/breakpoints";
 
-header {
-    height: 75px;
-    margin: 10px;
 
-    h1 {
-        margin: 0;
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    background-color: #999999;
+    color: white;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-around;
+    width: 40%;
+    list-style: none;
+    & a {
+        color: white;
+        list-style: none;
+        display: flex;
+        letter-spacing: 0.1rem;
+        text-decoration: none;
+        cursor: pointer;
+        padding: 1rem;
+        &:hover {
+            background-color: #9CC3D5FF;
+        }  
     }
+}
+
+.logo {
+    letter-spacing: 0.2rem;
+    font-size: 1.2rem;
 }

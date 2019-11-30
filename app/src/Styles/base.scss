@@ -2,12 +2,20 @@
 @import "./core/viewport-indicator";
 
 // Global markup
-body {
+* {
+    padding: 0;
     margin: 0;
+    box-sizing: border-box;
+    font-family: Helvetica, sans-serif;
+}
+body{
+    background-color: #777777;
 }
 
 // Components
 @import "./Components/Header";
+@import "./Components/Upload.scss";
+@import "./Components/App.scss";
 
 // Helpers
 @include viewportIndicator;
