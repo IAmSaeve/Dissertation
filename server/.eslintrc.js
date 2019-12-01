@@ -14,5 +14,7 @@ module.exports = {
     },
     "rules": {
         "no-unused-vars": 0,
+        "semi": 1,
+        "quotes": ["error", "single"]
     }
 };

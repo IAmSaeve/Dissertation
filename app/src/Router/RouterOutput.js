@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Upload from '../Pages/Upload';

@@ -23,5 +23,8 @@ module.exports = {
         "react"
     ],
     "rules": {
+        "no-unused-vars": 0,
+        "semi": 1,
+        "quotes": ["error", "double"]
     }
 };

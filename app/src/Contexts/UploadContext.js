@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { Component, createContext } from 'react';
 
 export const UploadContext = createContext();
