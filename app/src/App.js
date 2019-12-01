@@ -1,15 +1,18 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
-import Navi from "./Router/Navi";
 import RouterOutput from "./Router/RouterOutput";
-import './Styles/App.scss';
+import './Styles/base.scss';
+import UploadContextProvider from './Contexts/UploadContext';
+import Header from "./Router/Header";
 
 class App extends Component {
   render() {
     return (
-      <div>
-          <Navi></Navi>
-         <RouterOutput></RouterOutput>     
+      <div className="mainGrid">
+      <UploadContextProvider>
+      <Header className="header"/>
+        <RouterOutput className="body"/>
+        </UploadContextProvider>
       </div>
     );
   }
