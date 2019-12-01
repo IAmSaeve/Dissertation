@@ -4,41 +4,27 @@ const crypto = require('crypto');
 const fs = require('fs');
 const { tmpdir } = require('os');
 const { sep } = require('path');
-const multer = require('multer')
+const Busboy = require('busboy');
 
-var routeId = "";
-
-// FIXME: Create only one folder per request
-let storage = multer.diskStorage({
-  // pass function that will generate destination path
-  destination: (req, file, cb) => {
-    routeId = crypto.randomBytes(8).toString('hex');
-    const filePath = `${tmpdir()}${sep}${routeId}`;
-    fs.mkdirSync(filePath, { recursive: true })
-    console.log('DEST', filePath)
-    console.log('FILE', file.originalname)
-    cb(
-      null,
-      filePath
-    );
-  },
-  // pass function that may generate unique filename if needed
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      file.originalname
-    );
-  }
-});
-
-let upload = multer({ storage: storage })
-
-// TODO: Maybe clear id after response
-router.post('/', upload.any(), function (req, res, next) {
-  // Create download URL
+// TODO: Extract busboy to separate file handler
+// TODO: Add error handling to busboy file writing
+router.post('/', (req, res, next) => {
+  const busboy = new Busboy({ headers: req.headers });
+  const routeId = crypto.randomBytes(8).toString('hex');
   const downloadUrl = `${req.protocol}://${req.get('host')}/download/${routeId}`
+  const dir = `${tmpdir()}${sep}${routeId}`;
 
-  res.json(downloadUrl)
+  fs.mkdirSync(dir, { recursive: true })
+
+  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+    file.pipe(fs.createWriteStream(`${dir}${sep}${filename}`));
+  });
+
+  busboy.on('finish', () => {
+    res.writeHead(200, { 'Connection': 'close' }).end(downloadUrl);
+  });
+
+  return req.pipe(busboy);
 });
 
 module.exports = router;
