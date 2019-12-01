@@ -14,8 +14,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/upload', uploadRouter);
 app.use('/download', downloadRouter);
-app.listen(3001, () =>
-  console.log('Express server is running on localhost:3001')
-);
+
 
 module.exports = app;
