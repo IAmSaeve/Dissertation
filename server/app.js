@@ -1,6 +1,6 @@
 const express = require('express');
 const logger = require('morgan');
-const cors = require('cors')
+const cors = require('cors');
 
 // Import routes
 const uploadRouter = require('./routes/upload');
@@ -10,7 +10,7 @@ const app = express();
 
 // Middleware
 app.use(logger('dev'));
-app.use(cors({ origin: false }))
+app.use(cors({ origin: false }));
 
 // Register routes
 app.use('/upload', uploadRouter);

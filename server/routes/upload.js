@@ -11,10 +11,10 @@ const Busboy = require('busboy');
 router.post('/', (req, res, next) => {
   const busboy = new Busboy({ headers: req.headers });
   const routeId = crypto.randomBytes(8).toString('hex');
-  const downloadUrl = `${req.protocol}://${req.get('host')}/download/${routeId}`
+  const downloadUrl = `${req.protocol}://${req.get('host')}/download/${routeId}`;
   const dir = `${tmpdir()}${sep}${routeId}`;
 
-  fs.mkdirSync(dir, { recursive: true })
+  fs.mkdirSync(dir, { recursive: true });
 
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
     file.pipe(fs.createWriteStream(`${dir}${sep}${filename}`));
