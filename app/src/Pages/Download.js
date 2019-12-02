@@ -3,7 +3,9 @@ import React from "react";
 class Download extends React.Component {
   render() {
     return (
-      <div>Download</div>
+      <div>
+        <pre>{this.props.match.params.id}</pre>
+      </div>
     );
   }
 }
