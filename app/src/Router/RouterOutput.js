@@ -7,8 +7,7 @@ const Router = () => (
   <main>
     <BrowserRouter>
       <Switch>
-        <Redirect exact from="/Download" to="/Upload" />
-        <Route exact path='/' component={Upload} />
+        <Route exact path='/Upload' component={Upload} />
         <Route exact path='/Download/:id' component={Download} />
         <Redirect to="/Upload" />
       </Switch>
