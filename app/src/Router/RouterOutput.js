@@ -1,21 +1,18 @@
-import React, { Component } from "react";
-import { Switch, Route } from "react-router-dom";
+import React from "react";
+import { Switch, Route, Redirect, BrowserRouter } from "react-router-dom";
 import Upload from "../Pages/Upload";
 import Download from "../Pages/Download";
 
-class RouterOutput extends Component {
-  render() {
-    return (
-      <main>
-        <div>
-          <Switch>
-            <Route exact path='/Download' component={Download} />
-            <Route path='/' component={Upload} />
-          </Switch>
-        </div>
-      </main>
-    );
-  }
-}
+const Router = () => (
+  <main>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path='/Upload' component={Upload} />
+        <Route exact path='/Download/:id' component={Download} />
+        <Redirect to="/Upload" />
+      </Switch>
+    </BrowserRouter>
+  </main>
+);
 
-export default RouterOutput;
+export default Router;
