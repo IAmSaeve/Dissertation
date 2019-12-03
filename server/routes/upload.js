@@ -21,7 +21,8 @@ router.post('/', (req, res, next) => {
   });
 
   busboy.on('finish', () => {
-    res.writeHead(200, { 'Connection': 'close' }).end(downloadUrl);
+    res.writeHead(200, { 'Connection': 'close' });
+    res.end(downloadUrl);
   });
 
   return req.pipe(busboy);
