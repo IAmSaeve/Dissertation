@@ -39,7 +39,7 @@ class UploadContextProvider extends Component {
             const data = new FormData();
             
             for (let index = 0; index < files.length; index++) {
-                data.append(files[index].name, files[index].file);
+                data.append("file", new Blob(files[index]), this.state.files[index].name);
             }
 
             var xhr = new XMLHttpRequest();
@@ -57,8 +57,8 @@ class UploadContextProvider extends Component {
                 console.log("Server got:", res);
               }
             };*/
-            console.log(data.get("file"));
-            console.log(data);
+            // console.log(data.get("file"));
+            // console.log(data);
             xhr.send(data);
         });
 
@@ -76,10 +76,10 @@ class UploadContextProvider extends Component {
             for (let index = 0; index < fileArray.length; index++) {
                 var aes = crypto2.createCipheriv("aes-256-cbc", CIPHER_KEY, initVect);
                 var encrypted = Buffer.concat([aes.update(new Buffer(JSON.stringify(fileArray[index]), "utf8")), aes.final()]);
-                files.push({ "name": fileArray[index].name, "file": encrypted });
+                files.push(encrypted);
             }
-            console.log(files);
-            resolve( files);
+            // console.log(files);
+            resolve(files);
         });
     }
 
