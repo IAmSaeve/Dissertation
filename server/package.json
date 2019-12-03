@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start:srv": "node ./bin/www",
-    "dev:srv": "npx supervisor ./bin/www"
+    "dev:srv": "npx supervisor -n error ./bin/www"
   },
   "dependencies": {
     "busboy": "^0.3.1",
