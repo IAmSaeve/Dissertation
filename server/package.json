@@ -7,6 +7,7 @@
     "dev:srv": "npx supervisor -n error ./bin/www"
   },
   "dependencies": {
+    "archiver": "^3.1.1",
     "busboy": "^0.3.1",
     "cors": "^2.8.5",
     "express": "~4.16.1",
