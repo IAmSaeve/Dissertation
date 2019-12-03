@@ -10,7 +10,7 @@ const app = express();
 
 // Middleware
 app.use(logger('dev'));
-app.use(cors({ origin: false }));
+app.use(cors({ origin: true }));
 
 // Register routes
 app.use('/upload', uploadRouter);
