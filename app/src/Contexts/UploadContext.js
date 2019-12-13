@@ -18,7 +18,6 @@ class UploadContextProvider extends Component {
 
             if (0 < event.target.files.length) {
                 for (let index = 0; index < event.target.files.length; index++) {
-                    console.log(event.target.files[index]);
                     this.setState(prevState => ({
                         files: prevState.files.concat(event.target.files[index])
                     })
@@ -33,52 +32,72 @@ class UploadContextProvider extends Component {
      */
     onSubmit = (event) => {
         event.preventDefault();
-
-        this.encryptFile(this.state.files).then(files =>
-        {
-            const data = new FormData();
-            
-            for (let index = 0; index < files.length; index++) {
-                data.append("file", new Blob(files[index]), this.state.files[index].name);
-            }
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:3001/upload", true);
-            //xhr.setRequestHeader("Content-Type", "multipart/form-data");
-            /*xhr.upload.onprogress = function (e) {
-                if (e.lengthComputable) {
-                    var percentComplete = (e.loaded / e.total) * 100;
-                    console.log(percentComplete + "% uploaded");
-                }
-            };
-            xhr.onload = function () {
-              if (this.status === 200) {
-                var res = JSON.parse(this.response);
-                console.log("Server got:", res);
-              }
-            };*/
-            // console.log(data.get("file"));
-            // console.log(data);
-            xhr.send(data);
+        this.fileHandler(this.state.files).then(files => {
+            // console.log(files[0]);
+             this.encryptFile(files).then(encfiles => {
+                 const data = new FormData();
+                
+                 for (let index = 0; index < encfiles.length; index++) {
+ 
+                     console.log(encfiles[index]);
+                     
+                     data.append("file", new Blob(encfiles[index]), this.state.files[index].name);
+                     
+                 }
+ 
+                 var xhr = new XMLHttpRequest();
+                 xhr.open("POST", "http://localhost:3001/upload", true);
+                 //xhr.setRequestHeader("Content-Type", "multipart/form-data");
+                 /*xhr.upload.onprogress = function (e) {
+                     if (e.lengthComputable) {
+                         var percentComplete = (e.loaded / e.total) * 100;
+                         console.log(percentComplete + "% uploaded");
+                     }
+                 };
+                 xhr.onload = function () {
+                   if (this.status === 200) {
+                     var res = JSON.parse(this.response);
+                     console.log("Server got:", res);
+                   }
+                 };
+                 //console.log(data.get("file"));
+                 // console.log(data);*/
+                 xhr.send(data);
+             });
         });
 
 
 
-    }
 
+
+    }
+    fileHandler(fileArray) {
+        return Promise.all([].map.call(fileArray, function (file) {
+            return new Promise(function (resolve, reject) {
+                var reader = new FileReader();
+                reader.onloadend = function () {
+                    resolve({ result: reader.result, file: file });
+                };
+                reader.readAsArrayBuffer(file);
+            });
+        })).then(function (results) {
+            //console.log(results);
+            return results;
+        });
+    }
 
     encryptFile(fileArray) {
         //TODO: kig på implementering af PBKDF2
-      return  new Promise((resolve) => {
-            let files = [];
+        
+        return new Promise((resolve) => {
+            var files = [];
             const initVect = crypto2.randomBytes(16);
-            const CIPHER_KEY = new Buffer("12345678901234567890123456789012");
+            const CIPHER_KEY = Buffer.from("12345678901234567890123456789012");
             for (let index = 0; index < fileArray.length; index++) {
                 var aes = crypto2.createCipheriv("aes-256-cbc", CIPHER_KEY, initVect);
-                var encrypted = Buffer.concat([aes.update(new Buffer(JSON.stringify(fileArray[index]), "utf8")), aes.final()]);
+                var encrypted = Buffer.concat([aes.update(Buffer.from(fileArray[index].result)), aes.final()]);
                 files.push(encrypted);
             }
-            // console.log(files);
             resolve(files);
         });
     }
