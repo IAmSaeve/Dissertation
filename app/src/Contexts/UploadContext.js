@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 import React, { Component, createContext } from "react";
 import crypto2 from "crypto";
+import chacha20 from "chacha20";
+import { Readable, Writable } from "stream";
 
 export const UploadContext = createContext();
 /**
@@ -39,9 +41,9 @@ class UploadContextProvider extends Component {
                 
                  for (let index = 0; index < encfiles.length; index++) {
  
-                     console.log(encfiles[index]);
+                     console.log("BLOB", new Blob([encfiles[index]]));
                      
-                     data.append("file", new Blob(encfiles[index]), this.state.files[index].name);
+                     data.append("file", new Blob([encfiles[index]]), this.state.files[index].name);
                      
                  }
  
@@ -76,30 +78,51 @@ class UploadContextProvider extends Component {
             return new Promise(function (resolve, reject) {
                 var reader = new FileReader();
                 reader.onloadend = function () {
+                    console.log("RESULT", reader.result);
                     resolve({ result: reader.result, file: file });
                 };
                 reader.readAsArrayBuffer(file);
             });
         })).then(function (results) {
-            //console.log(results);
             return results;
         });
     }
 
-    encryptFile(fileArray) {
-        //TODO: kig på implementering af PBKDF2
-        
-        return new Promise((resolve) => {
-            var files = [];
-            const initVect = crypto2.randomBytes(16);
-            const CIPHER_KEY = Buffer.from("12345678901234567890123456789012");
-            for (let index = 0; index < fileArray.length; index++) {
-                var aes = crypto2.createCipheriv("aes-256-cbc", CIPHER_KEY, initVect);
-                var encrypted = Buffer.concat([aes.update(Buffer.from(fileArray[index].result)), aes.final()]);
-                files.push(encrypted);
-            }
-            resolve(files);
-        });
+    // FIXME: This needs optimizing
+    async encryptFile(fileArray) {
+        const results = await Promise.all([].map.call(fileArray, function (file) {
+            return new Promise((resolve) => {
+                const initVect = crypto2.randomBytes(16);
+                // const CIPHER_KEY = Buffer.from("12345678901234567890123456789012");
+                const readable = new Readable();
+                const encrypted = new Writable();
+                // const aes = crypto2.createCipheriv("aes-256-ctr", CIPHER_KEY, initVect);
+                const buffer = Buffer.from((file.result));
+                
+
+                console.log("FILEARRAY", fileArray[0].result);
+
+                readable.on("data", data => {
+                    console.log("UENCDATA", data);
+                    const startTimeBuffer1 = performance.now();
+                    encrypted.write(chacha20.encrypt("password123", initVect, data));
+                    const durationBuffer1 = performance.now() - startTimeBuffer1;
+                    console.log(`Encrypt took ${durationBuffer1}ms`);
+                });
+
+                encrypted._write = (d) => {
+                    resolve(d);
+                };
+                readable._read = () => { };
+                readable.push(buffer);
+                // readable.push(null);
+                
+                // readable.pipe(aes).pipe(encrypted);
+
+            });
+        }));
+        console.log(results);
+        return results;
     }
 
 
