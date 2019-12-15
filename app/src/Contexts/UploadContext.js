@@ -1,10 +1,9 @@
 /* eslint-disable no-undef */
 import React, { Component, createContext } from "react";
-import crypto2 from "crypto";
-import chacha20 from "chacha20";
-import { Readable, Writable } from "stream";
+import { encrypt } from "chacha20";
 
 export const UploadContext = createContext();
+
 /**
  * Class responsible for handeling state of the upload content
  */
@@ -35,94 +34,69 @@ class UploadContextProvider extends Component {
     onSubmit = (event) => {
         event.preventDefault();
         this.fileHandler(this.state.files).then(files => {
-            // console.log(files[0]);
-             this.encryptFile(files).then(encfiles => {
-                 const data = new FormData();
-                
-                 for (let index = 0; index < encfiles.length; index++) {
- 
-                     console.log("BLOB", new Blob([encfiles[index]]));
-                     
-                     data.append("file", new Blob([encfiles[index]]), this.state.files[index].name);
-                     
-                 }
- 
-                 var xhr = new XMLHttpRequest();
-                 xhr.open("POST", "http://localhost:3001/upload", true);
-                 //xhr.setRequestHeader("Content-Type", "multipart/form-data");
-                 /*xhr.upload.onprogress = function (e) {
-                     if (e.lengthComputable) {
-                         var percentComplete = (e.loaded / e.total) * 100;
-                         console.log(percentComplete + "% uploaded");
-                     }
-                 };
-                 xhr.onload = function () {
-                   if (this.status === 200) {
-                     var res = JSON.parse(this.response);
-                     console.log("Server got:", res);
-                   }
-                 };
-                 //console.log(data.get("file"));
-                 // console.log(data);*/
-                 xhr.send(data);
-             });
-        });
+            this.encryptFile(files).then(encfiles => {
+                const data = new FormData();
 
+                for (let index = 0; index < encfiles.length; index++) {
 
+                    console.log("BLOB", new Blob([encfiles[index]]));
 
+                    data.append("file", new Blob([encfiles[index]]), this.state.files[index].name);
 
+                }
 
-    }
-    fileHandler(fileArray) {
-        return Promise.all([].map.call(fileArray, function (file) {
-            return new Promise(function (resolve, reject) {
-                var reader = new FileReader();
-                reader.onloadend = function () {
-                    console.log("RESULT", reader.result);
-                    resolve({ result: reader.result, file: file });
+                // TODO: Show upload progress
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "http://localhost:3001/upload", true);
+                //xhr.setRequestHeader("Content-Type", "multipart/form-data");
+                /*xhr.upload.onprogress = function (e) {
+                    if (e.lengthComputable) {
+                        var percentComplete = (e.loaded / e.total) * 100;
+                        console.log(percentComplete + "% uploaded");
+                    }
                 };
+                xhr.onload = function () {
+                  if (this.status === 200) {
+                    var res = JSON.parse(this.response);
+                    console.log("Server got:", res);
+                  }
+                };
+                //console.log(data.get("file"));
+                // console.log(data);*/
+                xhr.send(data);
+            });
+        });
+    }
+
+    // This cannot be optimized unless we use plain streams all around
+    // TODO: Report progress to frontend. Fix Window not responding for large files
+    async fileHandler(fileArray) {
+        const fileBuffers = await Promise.all([].map.call(fileArray, (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    resolve(Buffer.from(reader.result));
+                };
+                reader.onprogress = (p) => { console.log(`${file.name}:`, `${Math.round(p.loaded / p.total * 100)}% loaded`); };
                 reader.readAsArrayBuffer(file);
             });
-        })).then(function (results) {
-            return results;
-        });
+        }));
+        return fileBuffers;
     }
 
-    // FIXME: This needs optimizing
+    // This cannot be optimized unless we use plain streams all around
+    // TODO: Report progress to frontend. Fix Window not responding for large files
+    // TODO: Implement userpasswords
     async encryptFile(fileArray) {
-        const results = await Promise.all([].map.call(fileArray, function (file) {
+        const encryptedFiles = await Promise.all([].map.call(fileArray, (file) => {
             return new Promise((resolve) => {
-                const initVect = crypto2.randomBytes(16);
-                // const CIPHER_KEY = Buffer.from("12345678901234567890123456789012");
-                const readable = new Readable();
-                const encrypted = new Writable();
-                // const aes = crypto2.createCipheriv("aes-256-ctr", CIPHER_KEY, initVect);
-                const buffer = Buffer.from((file.result));
-                
-
-                console.log("FILEARRAY", fileArray[0].result);
-
-                readable.on("data", data => {
-                    console.log("UENCDATA", data);
-                    const startTimeBuffer1 = performance.now();
-                    encrypted.write(chacha20.encrypt("password123", initVect, data));
-                    const durationBuffer1 = performance.now() - startTimeBuffer1;
-                    console.log(`Encrypt took ${durationBuffer1}ms`);
-                });
-
-                encrypted._write = (d) => {
-                    resolve(d);
-                };
-                readable._read = () => { };
-                readable.push(buffer);
-                // readable.push(null);
-                
-                // readable.pipe(aes).pipe(encrypted);
-
+                const nonce = new Int8Array([73, 101, 161, 17, 719, 239, 52, 16, 21, 802, 361, 41, 9, 21, 92, 119, 488]);
+                const key = "password123";
+                const encData = encrypt(key, nonce, file);
+                resolve(encData);
             });
         }));
-        console.log(results);
-        return results;
+        return encryptedFiles;
     }
 
 
@@ -139,7 +113,7 @@ class UploadContextProvider extends Component {
             array.splice(index, 1);
             this.setState({ files: array });
         }
-        console.log(this.state.files);
+        // console.log(this.state.files);
     }
     /**
      * Render the selected content to be used by child components.
