@@ -23,9 +23,9 @@ class Uploadfiles extends Component {
     return (
       <div className="uploadFiles">
         {
-          files.map(file => {
+          files.map((file, index) => {
             return (
-              <div key={file.name} className="fileDiv">
+              <div key={index} className="fileDiv">
                 <span className="Filename">name: {this.LimitString(file.name)}</span>
                 <span className="Filename">size: {this.bytesToSize(file.size)}</span>
                 <i onClick={() => onRemove(file)} className="fas fa-minus-circle"></i>
