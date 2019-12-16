@@ -12,7 +12,9 @@ class UploadContextProvider extends Component {
     state = {
         files: [],
     };
-
+    /**
+     * Adds newly selected files to the allready selected files.
+     */
     onChange = (event) =>
         new Promise((resolve) => {
             event.persist();
@@ -27,8 +29,7 @@ class UploadContextProvider extends Component {
             resolve(event);
         });
     /**
-     * Function that adds all the selected files, to
-     * a formdata and sends data to the server.
+     * Chaining all the promises. 
      */
     onSubmit = (event) => {
         event.preventDefault();
@@ -41,7 +42,11 @@ class UploadContextProvider extends Component {
             });
         // });
     }
-
+    /**
+     * Post all the encrypted files to the server.
+     * TODO: Report progress to frontend. Fix Window not responding for large files
+     * @param {*} encfiles 
+     */
     postFiles(encfiles) {
         const data = new FormData();
         for (let index = 0; index < encfiles.length; index++) {
