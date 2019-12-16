@@ -16,7 +16,6 @@ class UploadContextProvider extends Component {
     onChange = (event) =>
         new Promise((resolve) => {
             event.persist();
-
             if (0 < event.target.files.length) {
                 for (let index = 0; index < event.target.files.length; index++) {
                     this.setState(prevState => ({
