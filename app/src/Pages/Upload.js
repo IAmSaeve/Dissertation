@@ -11,7 +11,7 @@ class Upload extends Component {
     //establishes what from the context to use
     const { onSubmit, onChange } = this.context;
     return (
-      <div className="uploadGrid">
+      <>
         <div className="centerdiv">
           <UploadFiles />
           <form onSubmit={onSubmit} id="uploadForm" encType="multipart/form-data">
@@ -28,7 +28,7 @@ class Upload extends Component {
             <input className="button" type="submit" value="Submit" />
           </form>
         </div>
-      </div>
+      </>
     );
   }
 }
