@@ -12,7 +12,11 @@ class Uploadfiles extends Component {
     if (bytes === 0) return "0 Byte";
     var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
     return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
- }
+  }
+  LimitString = (word) => {
+    if (word.length > 12) return word.substr(0, 12) + "..";
+    return word;    
+  }
   render() {
     //establishes what from the context to use
     const { files, onRemove } = this.context;
@@ -22,7 +26,7 @@ class Uploadfiles extends Component {
           files.map(file => {
             return (
               <div key={file.name} className="fileDiv">
-                <span className="Filename">name: {file.name}</span>
+                <span className="Filename">name: {this.LimitString(file.name)}</span>
                 <span className="Filename">size: {this.bytesToSize(file.size)}</span>
                 <i onClick={() => onRemove(file)} className="fas fa-minus-circle"></i>
               </div>
