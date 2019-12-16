@@ -32,39 +32,41 @@ class UploadContextProvider extends Component {
      */
     onSubmit = (event) => {
         event.preventDefault();
-        this.fileHandler(this.state.files).then(files => {
-            this.encryptFile(files).then(encfiles => {
-                const data = new FormData();
-
-                for (let index = 0; index < encfiles.length; index++) {
-
-                    console.log("BLOB", new Blob([encfiles[index]]));
-
-                    data.append("file", new Blob([encfiles[index]]), this.state.files[index].name);
-
-                }
-
-                // TODO: Show upload progress
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "http://localhost:3001/upload", true);
-                //xhr.setRequestHeader("Content-Type", "multipart/form-data");
-                /*xhr.upload.onprogress = function (e) {
-                    if (e.lengthComputable) {
-                        var percentComplete = (e.loaded / e.total) * 100;
-                        console.log(percentComplete + "% uploaded");
-                    }
-                };
-                xhr.onload = function () {
-                  if (this.status === 200) {
-                    var res = JSON.parse(this.response);
-                    console.log("Server got:", res);
-                  }
-                };
-                //console.log(data.get("file"));
-                // console.log(data);*/
-                xhr.send(data);
+        this.fileHandler(this.state.files)
+            .then(files =>
+                this.encryptFile(files)
+            )
+            .then(encfiles => {
+                this.postFiles(encfiles);
             });
-        });
+        // });
+    }
+
+    postFiles(encfiles) {
+        const data = new FormData();
+        for (let index = 0; index < encfiles.length; index++) {
+            console.log("BLOB", new Blob([encfiles[index]]));
+            data.append("file", new Blob([encfiles[index]]), this.state.files[index].name);
+        }
+        // TODO: Show upload progress
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost:3001/upload", true);
+        //xhr.setRequestHeader("Content-Type", "multipart/form-data");
+        /*xhr.upload.onprogress = function (e) {
+            if (e.lengthComputable) {
+                var percentComplete = (e.loaded / e.total) * 100;
+                console.log(percentComplete + "% uploaded");
+            }
+        };
+        xhr.onload = function () {
+          if (this.status === 200) {
+            var res = JSON.parse(this.response);
+            console.log("Server got:", res);
+          }
+        };
+        //console.log(data.get("file"));
+        // console.log(data);*/
+        xhr.send(data);
     }
 
     // This cannot be optimized unless we use plain streams all around
