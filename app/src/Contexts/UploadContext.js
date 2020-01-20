@@ -1,6 +1,13 @@
 /* eslint-disable no-undef */
 import React, { Component, createContext } from "react";
-import { encrypt } from "chacha20";
+import { WebFileStream } from "@cubbit/web-file-stream";
+import Enigma from "@cubbit/enigma";
+import crypto2 from "crypto";
+import { pipeline, PassThrough } from "stream";
+
+// TODO: Move somewhere else.
+// This is async and does not really belong here.
+Enigma.init();
 
 export const UploadContext = createContext();
 
@@ -8,10 +15,10 @@ export const UploadContext = createContext();
  * Class responsible for handeling state of the upload content
  */
 class UploadContextProvider extends Component {
-
     state = {
         files: [],
     };
+
     /**
      * Adds newly selected files to the allready selected files.
      */
@@ -28,83 +35,46 @@ class UploadContextProvider extends Component {
             }
             resolve(event);
         });
+
     /**
      * Chaining all the promises. 
      */
-    onSubmit = (event) => {
+    onSubmit = async (event) => {
         event.preventDefault();
-        this.fileHandler(this.state.files)
-            .then(files =>
-                this.encryptFile(files)
-            )
-            .then(encfiles => {
-                this.postFiles(encfiles);
+
+        // TODO: Figure out why this line, in this method, causes a halt after 1 run.
+        // await Enigma.init();
+        const aes = await new Enigma.AES().init();
+        const iv = Enigma.Random.bytes(16);
+        const pass = new PassThrough();
+        // const socket = new WebSocket("wss://echo.websocket.org/"); // Test socket
+        const socket = new WebSocket("ws://localhost:3001/ws"); // Test socket
+
+        for (let index = 0; index < this.state.files.length; index++) {
+            socket.onopen = () => {
+            const file = this.state.files[index];
+            const fileStream = WebFileStream.create_read_stream(file, {chunk_size: 1024000});
+
+            socket.onerror = (e) => console.log(e);
+            socket.onclose = (c) => console.log("c", c);
+            // socket.onmessage = (m) => {console.log(m);}
+            pass.on("data", (chunk) => { 
+                aes.encrypt(chunk, iv).then(v => {socket.send(v.content)});
             });
-        // });
-    }
-    /**
-     * Post all the encrypted files to the server.
-     * TODO: Report progress to frontend. Fix Window not responding for large files
-     * @param {*} encfiles 
-     */
-    postFiles(encfiles) {
-        const data = new FormData();
-        for (let index = 0; index < encfiles.length; index++) {
-            console.log("BLOB", new Blob([encfiles[index]]));
-            data.append("file", new Blob([encfiles[index]]), this.state.files[index].name);
+
+            pass.on("end", () => {
+               var refreshinterval = setInterval(() => {
+                    if (socket.bufferedAmount == 0) {
+                        socket.close();
+                        clearInterval(refreshinterval);
+                    }
+                }, 1000);
+            });
+
+            fileStream.pipe(pass);
+        };
         }
-        // TODO: Show upload progress
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://localhost:3001/upload", true);
-        //xhr.setRequestHeader("Content-Type", "multipart/form-data");
-        /*xhr.upload.onprogress = function (e) {
-            if (e.lengthComputable) {
-                var percentComplete = (e.loaded / e.total) * 100;
-                console.log(percentComplete + "% uploaded");
-            }
-        };
-        xhr.onload = function () {
-          if (this.status === 200) {
-            var res = JSON.parse(this.response);
-            console.log("Server got:", res);
-          }
-        };
-        //console.log(data.get("file"));
-        // console.log(data);*/
-        xhr.send(data);
     }
-
-    // This cannot be optimized unless we use plain streams all around
-    // TODO: Report progress to frontend. Fix Window not responding for large files
-    async fileHandler(fileArray) {
-        const fileBuffers = await Promise.all([].map.call(fileArray, (file) => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    resolve(Buffer.from(reader.result));
-                };
-                reader.onprogress = (p) => { console.log(`${file.name}:`, `${Math.round(p.loaded / p.total * 100)}% loaded`); };
-                reader.readAsArrayBuffer(file);
-            });
-        }));
-        return fileBuffers;
-    }
-
-    // This cannot be optimized unless we use plain streams all around
-    // TODO: Report progress to frontend. Fix Window not responding for large files
-    // TODO: Implement userpasswords
-    async encryptFile(fileArray) {
-        const encryptedFiles = await Promise.all([].map.call(fileArray, (file) => {
-            return new Promise((resolve) => {
-                const nonce = new Int8Array([73, 101, 161, 17, 719, 239, 52, 16, 21, 802, 361, 41, 9, 21, 92, 119, 488]);
-                const key = "password123";
-                const encData = encrypt(key, nonce, file);
-                resolve(encData);
-            });
-        }));
-        return encryptedFiles;
-    }
-
 
     /**
      * Function that removes the file selected.
@@ -119,8 +89,8 @@ class UploadContextProvider extends Component {
             array.splice(index, 1);
             this.setState({ files: array });
         }
-        // console.log(this.state.files);
     }
+
     /**
      * Render the selected content to be used by child components.
      */
