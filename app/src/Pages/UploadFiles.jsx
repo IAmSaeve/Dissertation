@@ -28,7 +28,7 @@ class Uploadfiles extends Component {
               <div key={index} className="fileDiv">
                 <span className="Filename">name: {this.LimitString(file.name)}</span>
                 <span className="Filename">size: {this.bytesToSize(file.size)}</span>
-                <i onClick={() => onRemove(file)} className="fas fa-minus-circle"></i>
+                <span onClick={() => onRemove(file)}>&#10005;</span>
               </div>
             );
           })

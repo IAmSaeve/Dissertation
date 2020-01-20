@@ -7,7 +7,7 @@ nav {
     justify-content: space-around;
     align-items: center;
     height: 100%;
-    background-color: #999999;
+    background-color: $backgroundColor;
     color: white;
 }
 
@@ -24,8 +24,10 @@ nav {
         text-decoration: none;
         cursor: pointer;
         padding: 1rem;
+        font-weight: 500;
+        font-size: 16px;
         &:hover {
-            background-color: #9CC3D5FF;
+            background-color: $primaryColor-2;
         }  
     }
 }
