@@ -1,5 +1,5 @@
 {
-  "name": "i-need-a-name-server",
+  "name": "filecompanion-server",
   "version": "0.0.2",
   "private": true,
   "scripts": {
@@ -11,6 +11,7 @@
     "busboy": "^0.3.1",
     "cors": "^2.8.5",
     "express": "~4.16.1",
+    "express-ws": "^4.0.0",
     "morgan": "~1.9.1",
     "ws": "^7.2.1"
   },

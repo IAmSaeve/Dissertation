@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var http = require('http');
+// var http = require('http');
 
 /**
  * Get port from environment and store in Express.
@@ -18,7 +18,10 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+// Hack to support express-ws
+// https://github.com/HenningM/express-ws/issues/104
+// var server = http.createServer(app);
+var server = app;
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -27,25 +30,6 @@ var server = http.createServer(app);
 server.listen(port, 'localhost');
 server.on('error', onError);
 server.on('listening', onListening);
-
-const WebSocket = require('ws');
-const crypto = require('crypto');
-const fs = require('fs');
-const { tmpdir } = require('os');
-const { sep } = require('path');
-const wss = new WebSocket.Server({server: server, path: '/ws', perMessageDeflate: false});
- 
-wss.on('connection', function connection(ws, req) {
-  const routeId = crypto.randomBytes(8).toString('hex');
-  const dir = `${tmpdir()}${sep}${routeId}`;
-  const duplex = WebSocket.createWebSocketStream(ws);
-  fs.mkdirSync(dir, { recursive: true });
-
-  ws.on('close', () => {console.log('done'); ws.terminate();});
-  ws.on('message', msg => {console.log('name:', msg)})
-
-  duplex.pipe(fs.createWriteStream(`${dir}${sep}test.txt`))
-});
 
 /**
  * Normalize a port into a number, string, or false.

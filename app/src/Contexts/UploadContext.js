@@ -2,8 +2,7 @@
 import React, { Component, createContext } from "react";
 import { WebFileStream } from "@cubbit/web-file-stream";
 import Enigma from "@cubbit/enigma";
-import crypto2 from "crypto";
-import { pipeline, PassThrough } from "stream";
+import { PassThrough } from "stream";
 
 // TODO: Move somewhere else.
 // This is async and does not really belong here.
@@ -47,32 +46,32 @@ class UploadContextProvider extends Component {
         const aes = await new Enigma.AES().init();
         const iv = Enigma.Random.bytes(16);
         const pass = new PassThrough();
-        // const socket = new WebSocket("wss://echo.websocket.org/"); // Test socket
         const socket = new WebSocket("ws://localhost:3001/ws"); // Test socket
 
         for (let index = 0; index < this.state.files.length; index++) {
             socket.onopen = () => {
-            const file = this.state.files[index];
-            const fileStream = WebFileStream.create_read_stream(file, {chunk_size: 1024000});
+                const file = this.state.files[index];
+                const fileStream = WebFileStream.create_read_stream(file, { chunk_size: 1024000 });
 
-            socket.onerror = (e) => console.log(e);
-            socket.onclose = (c) => console.log("c", c);
-            // socket.onmessage = (m) => {console.log(m);}
-            pass.on("data", (chunk) => { 
-                aes.encrypt(chunk, iv).then(v => {socket.send(v.content)});
-            });
+                socket.send(JSON.stringify({ fileName: file.name }));
 
-            pass.on("end", () => {
-               var refreshinterval = setInterval(() => {
-                    if (socket.bufferedAmount == 0) {
-                        socket.close();
-                        clearInterval(refreshinterval);
-                    }
-                }, 1000);
-            });
+                socket.onerror = (e) => console.log(e);
+                socket.onmessage = (m) => { console.log(m); };
+                pass.on("data", (chunk) => {
+                    aes.encrypt(chunk, iv).then(v => { socket.send(v.content); });
+                });
 
-            fileStream.pipe(pass);
-        };
+                pass.on("end", () => {
+                    var refreshinterval = setInterval(() => {
+                        if (socket.bufferedAmount === 0) {
+                            socket.close();
+                            clearInterval(refreshinterval);
+                        }
+                    }, 1000);
+                });
+
+                fileStream.pipe(pass);
+            };
         }
     }
 
