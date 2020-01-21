@@ -15,7 +15,7 @@ class Uploadfiles extends Component {
   }
   LimitString = (word) => {
     if (word.length > 12) return word.substr(0, 12) + "..";
-    return word;    
+    return word;
   }
   render() {
     //establishes what from the context to use
@@ -37,7 +37,7 @@ class Uploadfiles extends Component {
               </div>
             );
           })
-          }
+        }
       </div>
     );
   }
