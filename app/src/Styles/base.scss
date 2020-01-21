@@ -1,23 +1,35 @@
 @import "./settings";
 
-// Mixins import
-@import "./core/viewport-indicator";
-
-// Global markup
 * {
     font-family: $defaultFont;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     background-color: $backgroundColor;
+    height: 100%;
     padding: 0;
     margin: 0;
 }
 
-// Components
-@import "./Components/Header";
-@import "./Components/Upload";
-@import "./Components/App";
+#root {
+    height: 100%;
+}
 
-// Helpers
-@include viewportIndicator;
+.flex__container {
+    display: flex;
+    flex-direction: column;
+}
+
+.hidden {
+    display: none;
+}
+
+.medium-up {
+    @include breakpoint(small only) {
+        display: none !important;
+    }
+}
