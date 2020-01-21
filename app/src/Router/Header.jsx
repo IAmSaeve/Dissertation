@@ -9,7 +9,7 @@ class Head extends Component {
           <div className="logo">
             <h4>FileCompanion</h4>
           </div>
-          <ul className="nav-links">
+          <ul className="nav-links medium-up">
             <li>
               <Link to="/">Home</Link>
             </li>
