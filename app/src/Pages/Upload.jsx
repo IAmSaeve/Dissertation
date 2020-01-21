@@ -12,10 +12,10 @@ class Upload extends Component {
     const { onSubmit, onChange } = this.context;
     return (
       <>
-        <form onSubmit={onSubmit} id="uploadForm" encType="multipart/form-data">
+        <form onSubmit={onSubmit} encType="multipart/form-data">
           <label className="button buttonPostion" >
             <input
-              id="upload"
+              className="hidden"
               type="file"
               //sets the input field to null
               onChange={(event) => onChange(event).then(event => event.target.value = null)}
