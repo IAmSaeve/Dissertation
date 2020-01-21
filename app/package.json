@@ -4,6 +4,8 @@
   "private": true,
   "proxy": "http://localhost:3001",
   "dependencies": {
+    "@cubbit/enigma": "^1.0.2",
+    "@cubbit/web-file-stream": "^1.0.0",
     "chacha20": "^0.1.4",
     "node-sass": "^4.13.0",
     "react": "^16.12.0",

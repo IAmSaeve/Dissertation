@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var http = require('http');
+// var http = require('http');
 
 /**
  * Get port from environment and store in Express.
@@ -18,7 +18,10 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+// Hack to support express-ws
+// https://github.com/HenningM/express-ws/issues/104
+// var server = http.createServer(app);
+var server = app;
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -84,3 +87,5 @@ function onListening() {
   var addr = server.address();
   console.log(`Listening on ${addr.address}:${addr.port}`);
 }
+
+// module.exports = server;
