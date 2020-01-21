@@ -8,7 +8,7 @@ class UploadContainer extends Component {
 
   render() {
     return (
-        <div className="centerdiv">
+        <div className="centerdiv flex__container">
           <UploadFiles/>
           <Upload />
         </div>

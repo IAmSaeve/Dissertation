@@ -1,48 +1,65 @@
 @import "./core/breakpoints";
 
-.button {
-    padding: 0.7rem;
-    background-color: #999999;
-    color: white;
-    cursor: pointer;
-    text-align: center;
-    font-size: 1.0em;
-    border: none;
-    margin-left: 1.5rem;
-}
-
-.button:hover {
-    background-color: #9CC3D5FF;
-}
-
-.fileDiv {
-    
-    margin: 1%;
-    padding: 2%;
-    cursor: pointer;
-    background-color: #777777;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-}
-
-.uploadFiles {
-    background-color: #999999;
-    height: 75%;
-    margin: 1.5rem;
-    padding:1rem;
-    overflow-y: scroll;
-}
-
 .centerdiv {
-    width: 45%;
-    margin: 5% auto;
-    padding: 1rem;
+    padding: 2rem;
     background-color: #555555;
-    height: 25rem;
+    height: 50vh;
+    width: 641px;
+    margin: auto;
+    display: flex;
+    border: solid transparent;
+    border-radius: 10px;
 
-}
+    @include breakpoint(medium only) {
+        width: 50vw;
+    }
 
-.hidden {
-    display: none;
+    @include breakpoint(small only) {
+        width: auto;
+        height: auto;
+        padding: 1rem;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        flex: 1;
+    }
+
+    form {
+        margin-top: 20px;
+    }
+
+    .button {
+        padding: 0.7rem;
+        background-color: $primaryColor-1;
+        color: white;
+        cursor: pointer;
+        text-align: center;
+        font-size: 1.0em;
+        border: none;
+
+        &:not(:first-child) {
+            margin-left: 1.5rem;
+        }
+    }
+
+    .button:hover {
+        background-color: $primaryColor-2;
+    }
+
+    .fileDiv {
+        margin: 1%;
+        padding: 2%;
+        cursor: pointer;
+        background-color: #777777;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .uploadFiles {
+        background-color: #999999;
+        height: 100%;
+        padding: 1rem;
+        overflow-y: auto;
+    }
 }

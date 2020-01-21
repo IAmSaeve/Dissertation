@@ -13,15 +13,15 @@ class Upload extends Component {
     return (
       <>
         <form onSubmit={onSubmit} encType="multipart/form-data">
-          <label className="button buttonPostion" >
+          <label className="button">
             <input
               className="hidden"
               type="file"
               //sets the input field to null
-              onChange={(event) => onChange(event).then(event => event.target.value = null)}
+              onChange={(event) => onChange(event)}
               multiple
             />
-            Choose file here
+            Choose file
             </label>
           <input className="button" type="submit" value="Submit" />
         </form>
