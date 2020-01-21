@@ -1,21 +1,2 @@
 @import "./core/breakpoints";
 
-
-
-
-.mainGrid{
-display: grid;
-height: 100%;
-grid-template-columns: 1fr ;
-grid-template-rows: 5rem 1fr;
-grid-template-areas: 
-"header"
-"body";
-}
-
-.header{
-    grid-area: header;
-}
-.body{
-    grid-area: body;
-}
