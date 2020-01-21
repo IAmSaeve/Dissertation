@@ -6,7 +6,6 @@
     height: 50vh;
     width: 641px;
     margin: auto;
-    display: flex;
     border: solid transparent;
     border-radius: 10px;
 
@@ -44,6 +43,16 @@
 
     .button:hover {
         background-color: $primaryColor-2;
+    }
+
+    .fileDiv {
+        margin: 1%;
+        padding: 2%;
+        cursor: pointer;
+        background-color: #777777;
+        color: white;
+        display: flex;
+        justify-content: space-between;
     }
 
     .uploadFiles {
