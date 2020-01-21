@@ -7,6 +7,7 @@
     width: 641px;
     margin: auto;
     border: solid transparent;
+    justify-content: space-between;
     border-radius: 10px;
 
     @include breakpoint(medium only) {
@@ -48,17 +49,33 @@
     .fileDiv {
         margin: 1%;
         padding: 2%;
-        cursor: pointer;
         background-color: #777777;
         color: white;
         display: flex;
-        justify-content: space-between;
+
+        >span:not(:last-child) {
+            flex: 1;
+        }
+
+        :last-child {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+        }
     }
 
     .uploadFiles {
         background-color: #999999;
-        height: 100%;
+        text-align: justify;
         padding: 1rem;
         overflow-y: auto;
+
+        >:first-child {
+            display: flex;
+            justify-content: space-between;
+            margin: 1%;
+            border-bottom: solid 3px $primaryColor-1
+        }
     }
 }

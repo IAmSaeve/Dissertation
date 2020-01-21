@@ -22,17 +22,22 @@ class Uploadfiles extends Component {
     const { files, onRemove } = this.context;
     return (
       <div className="uploadFiles">
+        <div>
+          <span>Filename</span>
+          <span>File size</span>
+          <span>Remove</span>
+        </div>
         {
           files.map((file, index) => {
             return (
               <div key={index} className="fileDiv">
-                <span className="Filename">name: {this.LimitString(file.name)}</span>
-                <span className="Filename">size: {this.bytesToSize(file.size)}</span>
-                <span onClick={() => onRemove(file)}>&#10005;</span>
+                <span>{this.LimitString(file.name)}</span>
+                <span>{this.bytesToSize(file.size)}</span>
+                <span onClick={() => onRemove(file)}>&#x58;</span>
               </div>
             );
           })
-        }
+          }
       </div>
     );
   }
