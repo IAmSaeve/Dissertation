@@ -16,14 +16,12 @@ module.exports = function (ws, req) {
 
   const eof = new Transform({
     transform: function (chunk, encoding, callback) {
-      // TODO: Try catch
       if (chunk.toString().includes('fileName')) {
         fileName = JSON.parse(chunk.toString()).fileName;
         this.emit('name', fileName);
-      } else if(chunk.toString().includes('authTag')){
-        
-        fs.writeFile(dir+sep+'auth.json',chunk, (err)=>{});
-      }else {
+      } else if (chunk.toString().includes('authTag')) {
+        fs.writeFile(dir + sep + 'auth.json', chunk, (err) => { });
+      } else {
         this.push(chunk);
       }
       callback();

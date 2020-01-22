@@ -10,20 +10,22 @@ router.post('/:id', async function (req, res, next) {
   const dir = `${tmpdir()}${sep}${id}`;
 
   fs.readdir(dir, (err, files) => {
-      var fileName;
-      res.setHeader('Access-Control-Expose-Headers', ['content-disposition', 'x-authtag']);
-      for (let index = 0; index < files.length; index++) {
-        if(files[index]==='auth.json'){
-          const auth = JSON.parse(fs.readFileSync(dir+sep+files[index]));
-          res.setHeader('x-authtag', JSON.stringify(auth.authTag.data));
-        }else{
-          fileName=files[index];
-          res.attachment(files[index]);
-        }
+    
+    var fileName;
+    res.setHeader('Access-Control-Expose-Headers', ['content-disposition', 'x-authtag']);
+
+    for (let index = 0; index < files.length; index++) {
+      if (files[index] === 'auth.json') {
+        const auth = JSON.parse(fs.readFileSync(dir + sep + files[index]));
+        res.setHeader('x-authtag', JSON.stringify(auth.authTag.data));
+      } else {
+        fileName = files[index];
+        res.attachment(files[index]);
       }
-      
-      var file = fs.createReadStream(dir+sep+fileName);
-      file.pipe(res);
+    }
+
+    var file = fs.createReadStream(dir + sep + fileName);
+    file.pipe(res);
   });
 
 });
