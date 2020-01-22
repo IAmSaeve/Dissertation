@@ -20,7 +20,10 @@ module.exports = function (ws, req) {
       if (chunk.toString().includes('fileName')) {
         fileName = JSON.parse(chunk.toString()).fileName;
         this.emit('name', fileName);
-      } else {
+      } else if(chunk.toString().includes('authTag')){
+        
+        fs.writeFile(dir+sep+'auth.json',chunk, (err)=>{});
+      }else {
         this.push(chunk);
       }
       callback();

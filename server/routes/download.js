@@ -2,27 +2,30 @@ const express = require('express');
 const router = express.Router();
 const { tmpdir } = require('os');
 const { sep } = require('path');
-// TODO: Should probably use zlib module
-const archiver = require('archiver');
+const fs = require('fs');
 
 // FIXME: Don't respond to requst if folder does not exist
-router.post('/:id', function (req, res, next) {
+router.post('/:id', async function (req, res, next) {
   const id = req.params.id;
   const dir = `${tmpdir()}${sep}${id}`;
 
-  var archive = archiver('zip', {
-    zlib: { level: 9 } // Sets the compression level.
+  fs.readdir(dir, (err, files) => {
+      var fileName;
+      res.setHeader('Access-Control-Expose-Headers', ['content-disposition', 'x-authtag']);
+      for (let index = 0; index < files.length; index++) {
+        if(files[index]==='auth.json'){
+          const auth = JSON.parse(fs.readFileSync(dir+sep+files[index]));
+          res.setHeader('x-authtag', JSON.stringify(auth.authTag.data));
+        }else{
+          fileName=files[index];
+          res.attachment(files[index]);
+        }
+      }
+      
+      var file = fs.createReadStream(dir+sep+fileName);
+      file.pipe(res);
   });
 
-  // CORS header to allow browsers to read file type and name from header
-  res.setHeader('Access-Control-Expose-Headers', 'content-disposition');
-  res.contentType('application/zip');
-  res.attachment(`${id}.zip`);
-
-  archive.directory(`${dir}${sep}`, false);
-  archive.pipe(res);
-
-  archive.finalize();
 });
 
 module.exports = router;

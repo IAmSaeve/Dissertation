@@ -2,7 +2,8 @@
 import React, { Component, createContext } from "react";
 import { WebFileStream } from "@cubbit/web-file-stream";
 import Enigma from "@cubbit/enigma";
-import { PassThrough } from "stream";
+import {encrypt} from "chacha20";
+import crypto2 from "crypto";
 
 // TODO: Move somewhere else.
 // This is async and does not really belong here.
@@ -43,34 +44,41 @@ class UploadContextProvider extends Component {
 
         // TODO: Figure out why this line, in this method, causes a halt after 1 run.
         // await Enigma.init();
-        const aes = await new Enigma.AES().init();
-        const iv = Enigma.Random.bytes(16);
-        const pass = new PassThrough();
-        const socket = new WebSocket("ws://localhost:3001/ws"); // Test socket
+        // const nonce = new Int8Array([73, 101, 161, 17, 719, 239, 52, 16, 21, 802, 361, 41, 9, 21, 92, 119, 488]);
+        const nonce = Buffer.from([73, 101, 161, 17, 719, 239, 52, 16, 21, 802, 361, 41, 9, 21, 92, 119, 488]);
+        const key = Buffer.from("12345678901234567890123456789012");
+        // const key = "password123";
+        const socket = new WebSocket("ws://localhost:3001/ws");
 
         for (let index = 0; index < this.state.files.length; index++) {
             socket.onopen = () => {
                 const file = this.state.files[index];
-                const fileStream = WebFileStream.create_read_stream(file, { chunk_size: 1024000 });
+                const fileStream = WebFileStream.create_read_stream(file, { chunk_size: 64000 });
+                var aes = crypto2.createCipheriv("aes-256-gcm", key, nonce);
+                //aes.setAAD(Buffer.from([43, 123, 203, 59, 111, 24, 115, 237, 224, 117, 150, 53, 46, 234, 82, 215]));
 
                 socket.send(JSON.stringify({ fileName: file.name }));
 
                 socket.onerror = (e) => console.log(e);
                 socket.onmessage = (m) => { console.log(m); };
-                pass.on("data", (chunk) => {
-                    aes.encrypt(chunk, iv).then(v => { socket.send(v.content); });
+                
+                fileStream.on("data", (chunk) => {
+                    // console.log(aes.update(Buffer.from(chunk)));
+                    socket.send(aes.update(Buffer.from(chunk)));
                 });
 
-                pass.on("end", () => {
+                fileStream.on("end", () => {
+                   aes.final();
+                    console.log(aes.getAuthTag());
+                   socket.send(JSON.stringify({ authTag: aes.getAuthTag() }));
                     var refreshinterval = setInterval(() => {
                         if (socket.bufferedAmount === 0) {
+                            
                             socket.close();
                             clearInterval(refreshinterval);
                         }
                     }, 1000);
                 });
-
-                fileStream.pipe(pass);
             };
         }
     }
