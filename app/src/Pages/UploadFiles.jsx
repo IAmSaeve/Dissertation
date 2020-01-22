@@ -23,8 +23,8 @@ class Uploadfiles extends Component {
     return (
       <div className="uploadFiles">
         <div>
-          <p>Filename</p>
-          <p>File size</p>
+          <p>Name</p>
+          <p>Size</p>
           <span></span>
         </div>
         {
