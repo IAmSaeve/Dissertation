@@ -42,17 +42,16 @@
 
     .button {
         padding: 0.7rem;
-        background-color: $primaryColor-2;
-        color: white;
+        background-color: #393a4521;
         cursor: pointer;
         text-align: center;
         font-size: 1.0em;
         border: none;
-        border-radius: 10px;
+        transition: all 0.3s;
     }
 
     .button:hover {
-        background-color: $primaryColor-1;
+        box-shadow: inset 0px -3px 0 0 #0fd164;
     }
 
     .fileDiv {
