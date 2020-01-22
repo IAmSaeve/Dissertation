@@ -5,14 +5,16 @@
  */
 
 var app = require('../app');
-// var http = require('http');
 
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '3001');
+var addr = 'localhost';
+
 app.set('port', port);
+app.set('addr', addr);
 
 /**
  * Create HTTP server.
@@ -27,9 +29,8 @@ var server = app;
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port, 'localhost');
+server.listen(port, addr);
 server.on('error', onError);
-server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -79,13 +80,6 @@ function onError(error) {
   }
 }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
+console.log(`Listening on http://${server.settings.addr}:${server.settings.port}/`);
 
-function onListening() {
-  var addr = server.address();
-  console.log(`Listening on ${addr.address}:${addr.port}`);
-}
-
-// module.exports = server;
+module.exports = server;
