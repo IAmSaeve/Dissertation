@@ -4,7 +4,7 @@ import { UploadContext } from "../Contexts/UploadContext";
  * Class responsible for displaying selected and deselectfiles
  */
 class Uploadfiles extends Component {
-  // creates a context
+  // Creates a context
   static contextType = UploadContext;
 
   bytesToSize = (bytes) => {
@@ -18,7 +18,7 @@ class Uploadfiles extends Component {
     return word;
   }
   render() {
-    //establishes what from the context to use
+    // Establishes what from the context to use
     const { files, onRemove } = this.context;
     return (
       <div className="uploadFiles">
