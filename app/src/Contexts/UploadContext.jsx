@@ -25,9 +25,19 @@ class UploadContextProvider extends Component {
         this.setState({ show: false });
     };
 
-    clearURL =() =>{
+    // TODO: Implement
+    clearURL = () => {
         this.setState({ url: "" });
-    }
+    };
+
+    copy = (e) => {
+        const target = e.target;
+
+        target.select();
+        target.setSelectionRange(0, 99999); /*For mobile devices*/
+
+        document.execCommand("copy");
+    };
 
     /**
      * Adds newly selected files to the allready selected files.
@@ -119,6 +129,7 @@ class UploadContextProvider extends Component {
                 onSubmit: this.onSubmit,
                 showModal: this.showModal,
                 hideModal: this.hideModal,
+                copy: this.copy,
                 clearURL: this.clearURL
             }}>
                 {this.props.children}
