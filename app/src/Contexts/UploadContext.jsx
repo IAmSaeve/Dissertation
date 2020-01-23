@@ -1,7 +1,9 @@
 /* eslint-disable no-undef */
 import React, { Component, createContext } from "react";
 import { WebFileStream } from "@cubbit/web-file-stream";
-import crypto2 from "crypto";
+import Enigma from "@cubbit/enigma";
+
+Enigma.init();
 
 export const UploadContext = createContext();
 
@@ -40,32 +42,35 @@ class UploadContextProvider extends Component {
         const key = Buffer.from("12345678901234567890123456789012");
         // Establishes socket connection
         const socket = new WebSocket("ws://localhost:3001/ws");
+        const enig = await new Enigma.AES().init({key: key});
 
         for (let index = 0; index < this.state.files.length; index++) {
             socket.onopen = () => {
                 const file = this.state.files[index];
-                const fileStream = WebFileStream.create_read_stream(file, { chunk_size: 64000 });
-                var aes = crypto2.createCipheriv("aes-256-gcm", key, nonce);
+                const fileStream = WebFileStream.create_read_stream(file, { chunk_size: 102400 });
+                let encStream = enig.encrypt_stream(nonce);
 
                 socket.send(JSON.stringify({ fileName: file.name }));
 
                 socket.onerror = (e) => console.log(e);
                 socket.onmessage = (m) => { console.log(m); };
 
-                fileStream.on("data", (chunk) => {
-                    socket.send(aes.update(Buffer.from(chunk)));
+                encStream.on("data", (chunk) => {
+                    socket.send(chunk);
                 });
 
-                fileStream.on("end", () => {
-                    aes.final();
-                    socket.send(JSON.stringify({ authTag: aes.getAuthTag() }));
+                encStream.on("end", () => {
+                    socket.send(JSON.stringify({ authTag: encStream.getAuthTag() }));
                     var refreshinterval = setInterval(() => {
                         if (socket.bufferedAmount === 0) {
                             socket.close();
+                            console.log("Done uploading");
                             clearInterval(refreshinterval);
                         }
                     }, 1000);
                 });
+
+                fileStream.pipe(encStream);
             };
         }
     }
