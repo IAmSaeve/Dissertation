@@ -13,7 +13,21 @@ export const UploadContext = createContext();
 class UploadContextProvider extends Component {
     state = {
         files: [],
+        show: false,
+        url: ""
     };
+
+    showModal = () => {
+        this.setState({ show: true });
+    };
+
+    hideModal = () => {
+        this.setState({ show: false });
+    };
+
+    clearURL =() =>{
+        this.setState({ url: "" });
+    }
 
     /**
      * Adds newly selected files to the allready selected files.
@@ -42,18 +56,18 @@ class UploadContextProvider extends Component {
         const key = Buffer.from("12345678901234567890123456789012");
         // Establishes socket connection
         const socket = new WebSocket("ws://localhost:3001/ws");
-        const enig = await new Enigma.AES().init({key: key});
+        const enig = await new Enigma.AES().init({ key: key });
 
         for (let index = 0; index < this.state.files.length; index++) {
             socket.onopen = () => {
                 const file = this.state.files[index];
                 const fileStream = WebFileStream.create_read_stream(file, { chunk_size: 102400 });
                 let encStream = enig.encrypt_stream(nonce);
-
+                let link;
                 socket.send(JSON.stringify({ fileName: file.name }));
 
                 socket.onerror = (e) => console.log(e);
-                socket.onmessage = (m) => { console.log(m); };
+                socket.onmessage = (m) => { console.log(link=m.data); };
 
                 encStream.on("data", (chunk) => {
                     socket.send(chunk);
@@ -64,6 +78,8 @@ class UploadContextProvider extends Component {
                     var refreshinterval = setInterval(() => {
                         if (socket.bufferedAmount === 0) {
                             socket.close();
+                            this.setState({ url: link });
+                            this.showModal();
                             console.log("Done uploading");
                             clearInterval(refreshinterval);
                         }
@@ -99,7 +115,10 @@ class UploadContextProvider extends Component {
                 ...this.state,
                 onRemove: this.onRemove,
                 onChange: this.onChange,
-                onSubmit: this.onSubmit
+                onSubmit: this.onSubmit,
+                showModal: this.showModal,
+                hideModal: this.hideModal,
+                clearURL: this.clearURL
             }}>
                 {this.props.children}
             </UploadContext.Provider>
