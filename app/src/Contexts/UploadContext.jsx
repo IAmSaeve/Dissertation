@@ -71,8 +71,9 @@ class UploadContextProvider extends Component {
 
                 encStream.on("data", (chunk) => {
                     socket.send(chunk);
+                    encStream.uncork();
                 });
-
+               
                 encStream.on("end", () => {
                     socket.send(JSON.stringify({ authTag: encStream.getAuthTag() }));
                     var refreshinterval = setInterval(() => {

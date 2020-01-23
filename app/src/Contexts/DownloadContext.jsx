@@ -34,7 +34,6 @@ class DownloadContextProvider extends Component {
             fileStream._read = () => { };
             fileStream.push(Buffer.from(res));
             fileStream.push(null);
-
             // Decrypt files stream
             let decStream = enig.decrypt_stream(nonce, Buffer.from(JSON.parse(authtag)));
 
@@ -42,15 +41,16 @@ class DownloadContextProvider extends Component {
 
             decStream.on("data", d => {
                 buffer = Buffer.concat([buffer, d]);
+                decStream.uncork();
             });
 
             decStream.on("end", () => {
-                const file = new File([buffer], name, { type: type });
+                let file = new File([buffer], name, { type: type });
                 const link = document.createElement("a");
                 link.download = name;
                 link.href = window.URL.createObjectURL(file);
                 link.click();
-                link.remove();
+                link.remove();                
             });
 
             fileStream.pipe(decStream);
