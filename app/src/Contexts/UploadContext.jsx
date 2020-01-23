@@ -23,12 +23,9 @@ class UploadContextProvider extends Component {
 
     hideModal = () => {
         this.setState({ show: false });
-    };
-
-    // TODO: Implement
-    clearURL = () => {
         this.setState({ url: "" });
     };
+
 
     copy = (e) => {
         const target = e.target;
