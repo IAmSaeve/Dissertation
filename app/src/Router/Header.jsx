@@ -11,13 +11,13 @@ class Head extends Component {
           </div>
           <ul className="nav-links medium-up">
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/Upload">Home</Link>
             </li>
             <li>
-              <Link to="/about">About</Link>
+              <Link to="/About">About</Link>
             </li>
             <li>
-              <Link to="/projekt">Project</Link>
+              <Link to="/Project">Project</Link>
             </li>
           </ul>
         </nav>
