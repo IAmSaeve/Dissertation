@@ -15,7 +15,7 @@ const Project = () => (
     </p>
     </section>
     <section className="references">
-      <a href="https://github.com/sebkirller/Dissertation">
+      <a href="https://github.com/sebkirller/Dissertation" target="_blank" rel="noopener">
         <img src="/github.png" alt="Github" />
       </a>
     </section>
