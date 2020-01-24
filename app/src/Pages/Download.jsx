@@ -5,9 +5,8 @@ class Download extends React.Component {
   render() {
     const { load } = this.context;
     return (
-      <div>
-        <button onClick={(e) => load(this.props.match.params.id, e)}>Download</button>
-        <pre>{this.props.match.params.id}</pre>
+      <div className="download">
+        <button onClick={(e) => load(this.props.match.params.id, e)}>Download<span>&#10132;</span></button>
       </div>
     );
   }
