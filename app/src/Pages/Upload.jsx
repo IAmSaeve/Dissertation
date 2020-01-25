@@ -16,7 +16,6 @@ class Upload extends Component {
         <form onSubmit={onSubmit} encType="multipart/form-data">
           <label className="button">
             <input
-              id="input"
               className="hidden"
               type="file"
               onChange={(event) => onChange(event)}

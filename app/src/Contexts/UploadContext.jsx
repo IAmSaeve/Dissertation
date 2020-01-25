@@ -42,7 +42,8 @@ class UploadContextProvider extends Component {
      */
     onChange = (event) =>
         new Promise((resolve) => {
-            const files = event.target.files;
+            const target = event.target;
+            const files = target.files;
             if (0 < files.length) {
                 for (let index = 0; index < files.length; index++) {
                     this.setState(prevState => ({
@@ -50,9 +51,9 @@ class UploadContextProvider extends Component {
                     }));
                 }
             }
-            resolve(event);
-        }).then(()=>{
-            document.getElementById("input").value = ""; 
+            resolve(target);
+        }).then((target)=>{
+            target.value = null; 
         });
 
     /**
