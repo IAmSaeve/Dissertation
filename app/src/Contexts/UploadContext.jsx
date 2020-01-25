@@ -71,6 +71,8 @@ class UploadContextProvider extends Component {
             zip.file(this.state.files[index].name, this.state.files[index]);
         }
 
+        let content = zip.generateNodeStream();
+
         socket.onopen = () => {
 
             let encStream = enig.encrypt_stream(nonce);
