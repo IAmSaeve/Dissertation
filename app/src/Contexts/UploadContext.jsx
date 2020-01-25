@@ -39,18 +39,20 @@ class UploadContextProvider extends Component {
     /**
      * Adds newly selected files to the allready selected files.
      */
-    onChange = (event) =>
+    onChange = (event) => {
+        const files = event.target.files;
         new Promise((resolve) => {
-            const files = event.target.files;
             if (0 < files.length) {
                 for (let index = 0; index < files.length; index++) {
                     this.setState(prevState => ({
-                        files: [files[index] , ...prevState.files]
+                        files: [files[index], ...prevState.files]
                     }));
                 }
             }
             resolve(event);
-        });
+        }).then(() => {
+            document.getElementById("input").value = "";
+        });}
 
     /**
      * OnSubmit streams the file from state to the server via socket connect.

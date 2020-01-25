@@ -18,6 +18,7 @@ class Upload extends Component {
             <input
               className="hidden"
               type="file"
+              id="input"
               onChange={(event) => onChange(event)}
               multiple
             />
