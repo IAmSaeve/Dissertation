@@ -72,8 +72,7 @@ class UploadContextProvider extends Component {
         }
 
         socket.onopen = () => {
-            //const file = this.state.files[index];
-            //const fileStream = WebFileStream.create_read_stream(file, { chunk_size: 102400 });
+
             let encStream = enig.encrypt_stream(nonce);
             let link;
             socket.send(JSON.stringify({ fileName: "Yourfiles.zip" }));
