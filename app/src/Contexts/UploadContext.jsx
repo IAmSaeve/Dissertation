@@ -108,7 +108,7 @@ class UploadContextProvider extends Component {
     onRemove = (file) => {
         var array = [...this.state.files];
         var index = array.indexOf(file);
-        if (index >= -1) {
+        if (index >= 0) {
             array.splice(index, 1);
             this.setState({ files: array });
         }
