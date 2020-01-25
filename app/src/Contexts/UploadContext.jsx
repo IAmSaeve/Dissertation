@@ -51,6 +51,8 @@ class UploadContextProvider extends Component {
                 }
             }
             resolve(event);
+        }).then(()=>{
+            document.getElementById("input").value = ""; 
         });
 
     /**
