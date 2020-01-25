@@ -65,45 +65,43 @@ class UploadContextProvider extends Component {
         // Establishes socket connection
         const socket = new WebSocket("ws://localhost:3001/ws");
         const enig = await new Enigma.AES().init({ key: key });
-        let stream;
         var zip = new JSZip();
+        
         for (let index = 0; index < this.state.files.length; index++) {
-            zip.file(this.state.files[index].name,this.state.files[index]);
+            zip.file(this.state.files[index].name, this.state.files[index]);
         }
 
-        let content = zip.generateNodeStream();
-        
-            socket.onopen = () => {
-                //const file = this.state.files[index];
-                //const fileStream = WebFileStream.create_read_stream(file, { chunk_size: 102400 });
-                let encStream = enig.encrypt_stream(nonce);
-                let link;
-                socket.send(JSON.stringify({ fileName: "Yourfiles.zip" }));
+        socket.onopen = () => {
+            //const file = this.state.files[index];
+            //const fileStream = WebFileStream.create_read_stream(file, { chunk_size: 102400 });
+            let encStream = enig.encrypt_stream(nonce);
+            let link;
+            socket.send(JSON.stringify({ fileName: "Yourfiles.zip" }));
 
-                socket.onerror = (e) => console.log(e);
-                socket.onmessage = (m) => { console.log(link=m.data); };
+            socket.onerror = (e) => console.log(e);
+            socket.onmessage = (m) => { console.log(link = m.data); };
 
-                encStream.on("data", (chunk) => {
-                    socket.send(chunk);
-                    encStream.uncork();
-                });
-               
-                encStream.on("end", () => {
-                    socket.send(JSON.stringify({ authTag: encStream.getAuthTag() }));
-                    var refreshinterval = setInterval(() => {
-                        if (socket.bufferedAmount === 0) {
-                            socket.close();
-                            this.setState({ url: link });
-                            this.showModal();
-                            console.log("Done uploading");
-                            clearInterval(refreshinterval);
-                        }
-                    }, 1000);
-                });
+            encStream.on("data", (chunk) => {
+                socket.send(chunk);
+                encStream.uncork();
+            });
 
-                content.pipe(encStream);
-            };
-        
+            encStream.on("end", () => {
+                socket.send(JSON.stringify({ authTag: encStream.getAuthTag() }));
+                var refreshinterval = setInterval(() => {
+                    if (socket.bufferedAmount === 0) {
+                        socket.close();
+                        this.setState({ url: link });
+                        this.showModal();
+                        console.log("Done uploading");
+                        clearInterval(refreshinterval);
+                    }
+                }, 1000);
+            });
+
+            content.pipe(encStream);
+        };
+
     }
 
     /**
