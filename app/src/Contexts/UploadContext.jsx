@@ -42,7 +42,7 @@ class UploadContextProvider extends Component {
     onChange = (event) =>
         new Promise((resolve) => {
             const files = event.target.files;
-            if (0 < e.length) {
+            if (0 < files.length) {
                 for (let index = 0; index < files.length; index++) {
                     this.setState(prevState => ({
                         files: [files[index] , ...prevState.files]
