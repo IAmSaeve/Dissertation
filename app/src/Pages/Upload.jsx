@@ -9,7 +9,8 @@ class Upload extends Component {
   static contextType = UploadContext;
   render() {
     // Establishes what from the context to use
-    const { onSubmit, onChange } = this.context;
+    const { onSubmit, onChange, files } = this.context;
+    const showHideClassName = files.length > 0 ? "button" : "button hidden";
     return (
       <>
         <form onSubmit={onSubmit} encType="multipart/form-data">
@@ -22,7 +23,7 @@ class Upload extends Component {
             />
             Choose file
             </label>
-          <input className="button" type="submit" value="Submit" />
+          <input className={showHideClassName} type="submit" value="Submit" />
         </form>
       </>
     );
