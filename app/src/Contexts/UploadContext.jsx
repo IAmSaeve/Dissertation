@@ -16,7 +16,8 @@ class UploadContextProvider extends Component {
         files: [],
         show: false,
         url: "",
-        popupstate: false
+        popupstate: false,
+        SpinnerActive: false
     };
 
     showModal = () => {
@@ -67,6 +68,7 @@ class UploadContextProvider extends Component {
      * while streaming the data, each data chunk gets encrypted. 
      */
     onSubmit = async (event) => {
+        this.setState({ SpinnerActive: true });
         event.preventDefault();
         // Encrypt values
         const nonce = Buffer.from([73, 101, 161, 17, 719, 239, 52, 16, 21, 802, 361, 41, 9, 21, 92, 119, 488]);
@@ -102,6 +104,7 @@ class UploadContextProvider extends Component {
                     if (socket.bufferedAmount === 0) {
                         socket.close();
                         this.setState({ url: link });
+                        this.setState({ SpinnerActive: false });
                         this.showModal();
                         console.log("Done uploading");
                         clearInterval(refreshinterval);
@@ -142,7 +145,7 @@ class UploadContextProvider extends Component {
                 showModal: this.showModal,
                 hideModal: this.hideModal,
                 copy: this.copy,
-                clearURL: this.clearURL
+                clearURL: this.clearURL,
             }}>
                 {this.props.children}
             </UploadContext.Provider>
