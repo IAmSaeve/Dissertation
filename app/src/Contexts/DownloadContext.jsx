@@ -11,7 +11,14 @@ export const DownloadContext = createContext();
  * Loading single with streams and decrypting
  */
 class DownloadContextProvider extends Component {
+    
+    state = {
+        SpinnerActive: false
+    };
+
+
     load = async (id, e) => {
+        this.setState({ SpinnerActive: true });
         const response = await fetch(`http://localhost:3001/download/${id}`, { method: "POST" });
         if (!response.ok) throw new Error("HTTP error " + response.status);
         const nameExp = new RegExp(/"(.*)"/);
@@ -26,7 +33,7 @@ class DownloadContextProvider extends Component {
         const nonce = Buffer.from([73, 101, 161, 17, 719, 239, 52, 16, 21, 802, 361, 41, 9, 21, 92, 119, 488]);
         const key = Buffer.from("12345678901234567890123456789012");
 
-        const enig = await new Enigma.AES().init({key: key});
+        const enig = await new Enigma.AES().init({ key: key });
 
         response.arrayBuffer().then(async res => {
             // Creates file stream with a fixed chunk size
@@ -49,15 +56,16 @@ class DownloadContextProvider extends Component {
                 const link = document.createElement("a");
                 link.download = name;
                 link.href = window.URL.createObjectURL(file);
+                this.setState({ SpinnerActive: false });
                 link.click();
-                link.remove();                
+                link.remove();
             });
 
             fileStream.pipe(decStream);
         })
-        .catch(error => {
-            console.log(error);
-        });
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     /**
@@ -66,6 +74,7 @@ class DownloadContextProvider extends Component {
     render() {
         return (
             <DownloadContext.Provider value={{
+                ...this.state,
                 load: this.load
             }}>
                 {this.props.children}
