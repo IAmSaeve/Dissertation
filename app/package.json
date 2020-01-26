@@ -7,11 +7,13 @@
     "@cubbit/enigma": "^1.0.2",
     "@cubbit/web-file-stream": "^1.0.0",
     "chacha20": "^0.1.4",
+    "jszip": "^3.2.2",
     "node-sass": "^4.13.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
+    "react-spinners": "^0.8.0",
     "stream-to-blob": "^2.0.0"
   },
   "scripts": {
