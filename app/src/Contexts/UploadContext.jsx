@@ -15,7 +15,8 @@ class UploadContextProvider extends Component {
     state = {
         files: [],
         show: false,
-        url: ""
+        url: "",
+        popupstate: false
     };
 
     showModal = () => {
@@ -35,6 +36,11 @@ class UploadContextProvider extends Component {
         target.setSelectionRange(0, 99999); /*For mobile devices*/
 
         document.execCommand("copy");
+        this.setState({ popupstate: true });
+        setTimeout(() => {
+            this.setState({ popupstate: false }); 
+        }, 750);
+
     };
 
     /**
@@ -47,13 +53,13 @@ class UploadContextProvider extends Component {
             if (0 < files.length) {
                 for (let index = 0; index < files.length; index++) {
                     this.setState(prevState => ({
-                        files: [files[index] , ...prevState.files]
+                        files: [files[index], ...prevState.files]
                     }));
                 }
             }
             resolve(target);
-        }).then((target)=>{
-            target.value = null; 
+        }).then((target) => {
+            target.value = null;
         });
 
     /**
@@ -69,12 +75,12 @@ class UploadContextProvider extends Component {
         const socket = new WebSocket("ws://localhost:3001/ws");
         const enig = await new Enigma.AES().init({ key: key });
         var zip = new JSZip();
-        
+
         for (let index = 0; index < this.state.files.length; index++) {
             zip.file(this.state.files[index].name, this.state.files[index]);
         }
 
-       // let content = zip.generateNodeStream();
+        // let content = zip.generateNodeStream();
 
         socket.onopen = () => {
 
@@ -103,7 +109,7 @@ class UploadContextProvider extends Component {
                 }, 1000);
             });
 
-            zip.generateNodeStream({streamFiles:true}).pipe(encStream);
+            zip.generateNodeStream({ streamFiles: true }).pipe(encStream);
         };
 
     }
