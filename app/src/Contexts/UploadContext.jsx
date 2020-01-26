@@ -16,7 +16,8 @@ class UploadContextProvider extends Component {
         files: [],
         show: false,
         url: "",
-        popupstate: false
+        popupstate: false,
+        SpinnerActive: false
     };
 
     showModal = () => {
@@ -68,6 +69,7 @@ class UploadContextProvider extends Component {
      */
     onSubmit = async (event) => {
         event.preventDefault();
+        this.setState({ SpinnerActive: true });
         // Encrypt values
         const nonce = Buffer.from([73, 101, 161, 17, 719, 239, 52, 16, 21, 802, 361, 41, 9, 21, 92, 119, 488]);
         const key = Buffer.from("12345678901234567890123456789012");
@@ -102,6 +104,7 @@ class UploadContextProvider extends Component {
                     if (socket.bufferedAmount === 0) {
                         socket.close();
                         this.setState({ url: link });
+                        this.setState({ SpinnerActive: false });
                         this.showModal();
                         console.log("Done uploading");
                         clearInterval(refreshinterval);
