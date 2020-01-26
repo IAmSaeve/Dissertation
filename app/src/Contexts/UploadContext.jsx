@@ -1,7 +1,8 @@
 /* eslint-disable no-undef */
 import React, { Component, createContext } from "react";
-import { WebFileStream } from "@cubbit/web-file-stream";
+//import { WebFileStream } from "@cubbit/web-file-stream";
 import Enigma from "@cubbit/enigma";
+import JSZip from "jszip";
 
 Enigma.init();
 
@@ -14,7 +15,8 @@ class UploadContextProvider extends Component {
     state = {
         files: [],
         show: false,
-        url: ""
+        url: "",
+        popupstate: false
     };
 
     showModal = () => {
@@ -34,14 +36,20 @@ class UploadContextProvider extends Component {
         target.setSelectionRange(0, 99999); /*For mobile devices*/
 
         document.execCommand("copy");
+        this.setState({ popupstate: true });
+        setTimeout(() => {
+            this.setState({ popupstate: false }); 
+        }, 750);
+
     };
 
     /**
      * Adds newly selected files to the allready selected files.
      */
-    onChange = (event) => {
-        const files = event.target.files;
+    onChange = (event) =>
         new Promise((resolve) => {
+            const target = event.target;
+            const files = target.files;
             if (0 < files.length) {
                 for (let index = 0; index < files.length; index++) {
                     this.setState(prevState => ({
@@ -49,10 +57,10 @@ class UploadContextProvider extends Component {
                     }));
                 }
             }
-            resolve(event);
-        }).then(() => {
-            document.getElementById("input").value = "";
-        });}
+            resolve(target);
+        }).then((target) => {
+            target.value = null;
+        });
 
     /**
      * OnSubmit streams the file from state to the server via socket connect.
@@ -66,39 +74,44 @@ class UploadContextProvider extends Component {
         // Establishes socket connection
         const socket = new WebSocket("ws://localhost:3001/ws");
         const enig = await new Enigma.AES().init({ key: key });
+        var zip = new JSZip();
 
         for (let index = 0; index < this.state.files.length; index++) {
-            socket.onopen = () => {
-                const file = this.state.files[index];
-                const fileStream = WebFileStream.create_read_stream(file, { chunk_size: 102400 });
-                let encStream = enig.encrypt_stream(nonce);
-                let link;
-                socket.send(JSON.stringify({ fileName: file.name }));
-
-                socket.onerror = (e) => console.log(e);
-                socket.onmessage = (m) => { console.log(link=m.data); };
-
-                encStream.on("data", (chunk) => {
-                    socket.send(chunk);
-                    encStream.uncork();
-                });
-               
-                encStream.on("end", () => {
-                    socket.send(JSON.stringify({ authTag: encStream.getAuthTag() }));
-                    var refreshinterval = setInterval(() => {
-                        if (socket.bufferedAmount === 0) {
-                            socket.close();
-                            this.setState({ url: link });
-                            this.showModal();
-                            console.log("Done uploading");
-                            clearInterval(refreshinterval);
-                        }
-                    }, 1000);
-                });
-
-                fileStream.pipe(encStream);
-            };
+            zip.file(this.state.files[index].name, this.state.files[index]);
         }
+
+        // let content = zip.generateNodeStream();
+
+        socket.onopen = () => {
+
+            let encStream = enig.encrypt_stream(nonce);
+            let link;
+            socket.send(JSON.stringify({ fileName: "Yourfiles.zip" }));
+
+            socket.onerror = (e) => console.log(e);
+            socket.onmessage = (m) => { console.log(link = m.data); };
+
+            encStream.on("data", (chunk) => {
+                socket.send(chunk);
+                encStream.uncork();
+            });
+
+            encStream.on("end", () => {
+                socket.send(JSON.stringify({ authTag: encStream.getAuthTag() }));
+                var refreshinterval = setInterval(() => {
+                    if (socket.bufferedAmount === 0) {
+                        socket.close();
+                        this.setState({ url: link });
+                        this.showModal();
+                        console.log("Done uploading");
+                        clearInterval(refreshinterval);
+                    }
+                }, 1000);
+            });
+
+            zip.generateNodeStream({ streamFiles: true }).pipe(encStream);
+        };
+
     }
 
     /**

@@ -9,10 +9,10 @@ import { UploadContext } from "../Contexts/UploadContext";
 class UploadContainer extends Component {
   static contextType = UploadContext;
   render() {
-    const { hideModal, show, url, copy } = this.context;
+    const { hideModal, show, url, copy, popupstate } = this.context;
     return (
       <div className="centerdiv flex__container">
-        <Modal hideModal={hideModal} show={show} url={url} copy={copy}/>
+        <Modal hideModal={hideModal} show={show} url={url} copy={copy} popupstate={popupstate}/>
         <UploadFiles />
         <Upload />
       </div>
