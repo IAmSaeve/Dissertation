@@ -17,7 +17,10 @@ class UploadContextProvider extends Component {
         show: false,
         url: "",
         popupstate: false,
-        SpinnerActive: false
+        SpinnerActive: false,
+        filesize: 0,
+        tempsize: 0,
+        percentage: 0
     };
 
     showModal = () => {
@@ -39,7 +42,7 @@ class UploadContextProvider extends Component {
         document.execCommand("copy");
         this.setState({ popupstate: true });
         setTimeout(() => {
-            this.setState({ popupstate: false }); 
+            this.setState({ popupstate: false });
         }, 750);
 
     };
@@ -63,6 +66,20 @@ class UploadContextProvider extends Component {
             target.value = null;
         });
 
+    calcProgess = async (data) => {
+        this.setState(prevState => ({
+            tempsize: prevState.tempsize + parseInt(data)
+        }));
+        this.setState({
+            percentage: (this.state.tempsize / this.state.filesize * 100 | 0)
+        });
+    }
+    clearProgress = async () => {
+        this.setState({ tempsize: 0 });
+        this.setState({ percentage: 0 });
+        this.setState({ filesize: 0 });
+    }
+
     /**
      * OnSubmit streams the file from state to the server via socket connect.
      * while streaming the data, each data chunk gets encrypted. 
@@ -80,19 +97,27 @@ class UploadContextProvider extends Component {
         for (let index = 0; index < this.state.files.length; index++) {
             socket.onopen = () => {
                 const file = this.state.files[index];
+                this.setState({ filesize: file.size });
                 const fileStream = WebFileStream.create_read_stream(file, { chunk_size: 102400 });
                 let encStream = enig.encrypt_stream(nonce);
                 let link;
                 socket.send(JSON.stringify({ fileName: file.name }));
 
                 socket.onerror = (e) => console.log(e);
-                socket.onmessage = (m) => { console.log(link=m.data); };
+                socket.onmessage = (m) => {
+                    if (m.data.includes("http://localhost")) {
+                        console.log(m.data);
+                        link = m.data;
+                    } else {
+                        this.calcProgess(m.data);
+                    }
+                };
 
                 encStream.on("data", (chunk) => {
                     socket.send(chunk);
                     encStream.uncork();
                 });
-               
+
                 encStream.on("end", () => {
                     socket.send(JSON.stringify({ authTag: encStream.getAuthTag() }));
                     var refreshinterval = setInterval(() => {
@@ -101,6 +126,7 @@ class UploadContextProvider extends Component {
                             this.setState({ url: link });
                             this.setState({ SpinnerActive: false });
                             this.showModal();
+                            this.clearProgress();
                             console.log("Done uploading");
                             clearInterval(refreshinterval);
                         }

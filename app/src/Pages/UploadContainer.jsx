@@ -10,10 +10,10 @@ import Spinner from "./Spinner";
 class UploadContainer extends Component {
   static contextType = UploadContext;
   render() {
-    const { hideModal, show, url, copy, popupstate, SpinnerActive } = this.context;
+    const { hideModal, show, url, copy, popupstate, SpinnerActive, percentage } = this.context;
     return (
       <div className="centerdiv flex__container">
-        <Spinner SpinnerActive={SpinnerActive} />
+        <Spinner SpinnerActive={SpinnerActive} percentage={percentage} />
         <Modal hideModal={hideModal} show={show} url={url} copy={copy} popupstate={popupstate}/>
         <UploadFiles />
         <Upload />

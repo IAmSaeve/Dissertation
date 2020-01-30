@@ -29,6 +29,9 @@ module.exports = function (ws, req) {
   });
 
   ws.on('close', () => { console.log('done'); ws.terminate(); });
+  eof.on('data', d => {
+    ws.send(d.length);
+  });
 
   eof.on('name', n => {
     eof.pipe(fs.createWriteStream(`${dir}${sep}${n}`));

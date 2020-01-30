@@ -1,3 +1,17 @@
+.percentage{
+  color: official;
+  position: fixed;
+      width: 40rem;
+      height: 10rem;
+      top: 56%;
+      left: 25%;
+      transform: translate(-6.5%, -70%);
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      color: #0fd164;
+}
 .lds-spinner {
     color: official;
     position: fixed;
